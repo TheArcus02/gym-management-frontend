@@ -4,8 +4,9 @@ import { Separator } from '@/components/ui/separator'
 
 const Sidebar = () => {
   return (
-    <aside className='h-full items-stretch max-w-[200px]'>
-      <h1 className='text-xl font-bold text-center py-3 px-3'>
+    <aside className='h-full items-stretch max-w-[250px]'>
+      <h1 className='text-xl font-bold text-center py-5 px-3 flex items-center justify-center'>
+        <Dumbbell className='mr-2' size={24} />
         Gym Management
       </h1>
       <Separator />

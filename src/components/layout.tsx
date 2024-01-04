@@ -9,7 +9,10 @@ const Layout = () => {
       <div>
         <Separator orientation='vertical' />
       </div>
-      <Outlet />
+
+      <main>
+        <Outlet />
+      </main>
     </div>
   )
 }
