@@ -4,13 +4,13 @@ import { Separator } from '@/components/ui/separator'
 
 const Layout = () => {
   return (
-    <div className='flex min-h-screen h-full'>
+    <div className='flex h-screen max-h-screen'>
       <Sidebar />
       <div>
         <Separator orientation='vertical' />
       </div>
 
-      <main>
+      <main className='w-full'>
         <Outlet />
       </main>
     </div>
