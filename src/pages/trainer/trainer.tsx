@@ -1,12 +1,10 @@
-import { useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { Separator } from '@/components/ui/separator'
-import { PropagateLoader } from 'react-spinners'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -14,8 +12,11 @@ import {
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import Loader from '@/components/loader'
+import { XOctagon } from 'lucide-react'
 
 const Trainer = () => {
+  const queryClient = useQueryClient()
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ['trainers'],
     queryFn: async () => {
@@ -27,6 +28,22 @@ const Trainer = () => {
     onError: (error) => {
       console.log(error)
       toast.error('Error fetching trainers')
+    },
+  })
+
+  const { mutate: deleteTrainer } = useMutation({
+    mutationFn: async (id: number) => {
+      await axios.delete(
+        `${import.meta.env.VITE_BASE_URL || ''}/api/trainer/${id}`,
+      )
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries('trainers')
+      toast.success(`Trainer deleted successfully`)
+    },
+    onError: (error) => {
+      console.log(error)
+      toast.error('Error deleting trainer')
     },
   })
 
@@ -50,9 +67,18 @@ const Trainer = () => {
             {data.map((trainer) => (
               <Card key={trainer.id} className='max-w-[350px] w-full'>
                 <CardHeader>
-                  <CardTitle>
-                    {trainer.name} {trainer.surname}
-                  </CardTitle>
+                  <div className='flex justify-between'>
+                    <CardTitle>
+                      {trainer.name} {trainer.surname}
+                    </CardTitle>
+                    <Button
+                      variant='ghost'
+                      size='icon'
+                      onClick={() => deleteTrainer(trainer.id)}
+                    >
+                      <XOctagon />
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <p>Salary: ${trainer.salary}</p>
@@ -62,7 +88,9 @@ const Trainer = () => {
                   <Link to={`/trainer/${trainer.id}`}>
                     <Button variant='outline'>Edit</Button>
                   </Link>
-                  <Button size='sm'>Assign Clients</Button>
+                  <Link to={`/trainer/${trainer.id}/clients`}>
+                    <Button size='sm'>Show Clients</Button>
+                  </Link>
                 </CardFooter>
               </Card>
             ))}

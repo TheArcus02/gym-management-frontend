@@ -4,6 +4,8 @@ import { Toaster } from '@/components/ui/sonner'
 import Trainer from './pages/trainer/trainer'
 import AddTrainer from './pages/trainer/add-trainer'
 import EditTrainer from './pages/trainer/edit-trainer'
+import TrainerClients from './pages/trainer/trainer-clients'
+import AssignClient from './pages/trainer/assign-client'
 
 export default function App() {
   return (
@@ -15,6 +17,11 @@ export default function App() {
             <Route index element={<Trainer />} />
             <Route path='add' element={<AddTrainer />} />
             <Route path=':id' element={<EditTrainer />} />
+            <Route path=':id/clients' element={<TrainerClients />} />
+            <Route
+              path=':id/clients/assign'
+              element={<AssignClient />}
+            />
           </Route>
           <Route path='/client' element={<h2>Client</h2>} />
           <Route

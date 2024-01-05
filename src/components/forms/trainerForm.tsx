@@ -99,7 +99,7 @@ const TrainerForm = ({ trainer }: TrainerFormProps) => {
   })
 
   const onSubmit = (values: z.infer<typeof trainerSchema>) => {
-    if (values) {
+    if (trainer) {
       updateTrainer(values)
     } else {
       addTrainer(values)
