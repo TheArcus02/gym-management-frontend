@@ -1,5 +1,5 @@
 import FormWrapper from '@/components/form-wrapper'
-import TrainerForm from '@/components/forms/trainerForm'
+import TrainerForm from '@/components/forms/trainer-form'
 
 const AddTrainer = () => {
   return (

@@ -1,5 +1,5 @@
 import FormWrapper from '@/components/form-wrapper'
-import ClientForm from '@/components/forms/clientForm'
+import ClientForm from '@/components/forms/client-form'
 import Loader from '@/components/loader'
 import useClient from '@/hooks/use-client'
 import { useParams } from 'react-router-dom'
@@ -17,8 +17,8 @@ const EditClient = () => {
 
   return canDisplay ? (
     <FormWrapper
-      title='Add Client'
-      description='Add new client to the gym'
+      title='Edit Client'
+      description='Edit client details'
       form={<ClientForm client={client} />}
     />
   ) : (

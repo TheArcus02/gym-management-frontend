@@ -2,21 +2,20 @@ import axios from 'axios'
 import { useQuery } from 'react-query'
 import { toast } from 'sonner'
 
-const useClient = ({ id }: { id: number }) => {
+const useWorkoutPlans = () => {
   return useQuery({
-    queryKey: ['client', id],
-    enabled: !!id,
+    queryKey: 'workoutPlans',
     queryFn: async () => {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/client/${id}`,
+        `${import.meta.env.VITE_BASE_URL || ''}/api/workout-plan`,
       )
-      return data as Client
+      return data as WorkoutPlan[]
     },
     onError: (error) => {
       console.log(error)
-      toast.error('Error fetching client')
+      toast.error('Error fetching workout plans')
     },
   })
 }
 
-export default useClient
+export default useWorkoutPlans

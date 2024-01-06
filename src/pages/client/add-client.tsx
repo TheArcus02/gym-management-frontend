@@ -1,5 +1,5 @@
 import FormWrapper from '@/components/form-wrapper'
-import ClientForm from '@/components/forms/clientForm'
+import ClientForm from '@/components/forms/client-form'
 
 const AddClient = () => {
   return (

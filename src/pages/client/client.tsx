@@ -19,6 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import {
   Tooltip,
@@ -73,10 +74,10 @@ const Client = () => {
           </Link>
         </div>
         <Separator />
-        <div className='flex-1'>
-          {!canDisplay ? (
-            <Loader />
-          ) : (
+        {!canDisplay ? (
+          <Loader />
+        ) : (
+          <ScrollArea className='flex-1'>
             <div className='p-4 flex flex-wrap w-full gap-5'>
               {data.map((client) => (
                 <Card
@@ -152,8 +153,8 @@ const Client = () => {
                 </Card>
               ))}
             </div>
-          )}
-        </div>
+          </ScrollArea>
+        )}
       </div>
     </TooltipProvider>
   )

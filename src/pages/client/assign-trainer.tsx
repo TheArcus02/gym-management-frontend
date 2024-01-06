@@ -13,6 +13,8 @@ import {
 } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useParams } from 'react-router-dom'
+import useTrainers from '@/hooks/use-trainers'
+import useClient from '@/hooks/use-client'
 
 const AssignTrainer = () => {
   const params = useParams()
@@ -20,21 +22,14 @@ const AssignTrainer = () => {
 
   const {
     data: trainers,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ['trainers'],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/trainer`,
-      )
-      return data as Trainer[]
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error fetching trainers')
-    },
-  })
+    isLoading: isTrainersLoading,
+    isError: isTrainersError,
+  } = useTrainers()
+  const {
+    data: client,
+    isLoading: isClientLoading,
+    isError: isClientError,
+  } = useClient({ id: Number(params.id) })
 
   const { mutate: assignTrainer } = useMutation({
     mutationKey: [params.id],
@@ -55,7 +50,13 @@ const AssignTrainer = () => {
     },
   })
 
-  const canDisplay = !isLoading && !isError && trainers
+  const canDisplay =
+    !isClientLoading &&
+    !isTrainersLoading &&
+    !isClientError &&
+    !isTrainersError &&
+    trainers &&
+    client
 
   return (
     <div className='w-full h-full flex flex-col'>
@@ -80,9 +81,13 @@ const AssignTrainer = () => {
                   <p>Clients: {trainer.clients.length}</p>
                 </CardContent>
                 <CardFooter>
-                  <Button onClick={() => assignTrainer(trainer.id)}>
-                    Assign
-                  </Button>
+                  {client.trainerId === trainer.id ? (
+                    <Button disabled>Assigned</Button>
+                  ) : (
+                    <Button onClick={() => assignTrainer(trainer.id)}>
+                      Assign
+                    </Button>
+                  )}
                 </CardFooter>
               </Card>
             ))}

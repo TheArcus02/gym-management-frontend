@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { Separator } from '@/components/ui/separator'
@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom'
 import Loader from '@/components/loader'
 import { XOctagon } from 'lucide-react'
 import useTrainers from '@/hooks/use-trainers'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 const Trainer = () => {
   const queryClient = useQueryClient()
@@ -48,10 +49,10 @@ const Trainer = () => {
         </Link>
       </div>
       <Separator />
-      <div className='flex-1'>
-        {!canDisplay ? (
-          <Loader />
-        ) : (
+      {!canDisplay ? (
+        <Loader />
+      ) : (
+        <ScrollArea className='flex-1'>
           <div className='p-4 flex flex-wrap w-full gap-5'>
             {data.map((trainer) => (
               <Card key={trainer.id} className='max-w-[350px] w-full'>
@@ -84,8 +85,8 @@ const Trainer = () => {
               </Card>
             ))}
           </div>
-        )}
-      </div>
+        </ScrollArea>
+      )}
     </div>
   )
 }
