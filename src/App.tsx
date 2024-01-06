@@ -6,6 +6,9 @@ import AddTrainer from './pages/trainer/add-trainer'
 import EditTrainer from './pages/trainer/edit-trainer'
 import TrainerClients from './pages/trainer/trainer-clients'
 import AssignClient from './pages/trainer/assign-client'
+import Client from './pages/client/client'
+import AddClient from './pages/client/add-client'
+import EditClient from './pages/client/edit-client'
 
 export default function App() {
   return (
@@ -23,7 +26,11 @@ export default function App() {
               element={<AssignClient />}
             />
           </Route>
-          <Route path='/client' element={<h2>Client</h2>} />
+          <Route path='/client'>
+            <Route index element={<Client />} />
+            <Route path='add' element={<AddClient />} />
+            <Route path=':id' element={<EditClient />} />
+          </Route>
           <Route
             path='/workout-plan'
             element={<h2>Workout Plan</h2>}
