@@ -30,14 +30,14 @@ const AssignClient = () => {
         `${import.meta.env.VITE_BASE_URL || ''}/api/client`,
       )
 
-      return (data as Client[]).filter((client) => !client.trainer)
+      return (data as Client[]).filter((client) => !client.trainerId)
     },
   })
 
   const { mutate: assignClient } = useMutation({
     mutationKey: [params.id],
     mutationFn: async (clientId: number) => {
-      const { data } = await axios.put(
+      const { data } = await axios.patch(
         `${
           import.meta.env.VITE_BASE_URL || ''
         }/api/client/${clientId}/trainer/${parseInt(params.id!)}`,
@@ -56,7 +56,7 @@ const AssignClient = () => {
   })
 
   const canDisplay = !isLoading && !isError && clients
-  console.log(clients)
+
   return (
     <div className='w-full h-full flex flex-col'>
       <div className=' flex justify-between items-center'>

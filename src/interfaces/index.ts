@@ -23,7 +23,7 @@ interface Client extends DbObject {
   weight: number
   email: string
   workoutPlan: WorkoutPlan
-  trainer: Trainer
+  trainerId: number
 }
 
 interface WorkoutPlan extends DbObject {

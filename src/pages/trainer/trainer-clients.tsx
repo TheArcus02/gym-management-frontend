@@ -10,12 +10,13 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import axios from 'axios'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
 const TrainerClients = () => {
   const params = useParams()
+  const queryClient = useQueryClient()
 
   const {
     data: trainer,
@@ -35,6 +36,26 @@ const TrainerClients = () => {
     onError: (error) => {
       console.log(error)
       toast.error('Error fetching trainer')
+    },
+  })
+
+  const { mutate: removeClient } = useMutation({
+    mutationFn: async (clientId: number) => {
+      const { data } = await axios.patch(
+        `${
+          import.meta.env.VITE_BASE_URL || ''
+        }/api/client/${clientId}/trainer`,
+        {},
+      )
+      return data as Client
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['trainer', 'trainers'])
+      toast.success(`Client removed successfully`)
+    },
+    onError: (error) => {
+      console.log(error)
+      toast.error('Error removing client')
     },
   })
 
@@ -70,7 +91,11 @@ const TrainerClients = () => {
                   <Link to={``}>
                     <Button variant='outline'>Edit</Button>
                   </Link>
-                  <Button variant='destructive' size='sm'>
+                  <Button
+                    variant='destructive'
+                    size='sm'
+                    onClick={() => removeClient(client.id)}
+                  >
                     Remove
                   </Button>
                 </CardFooter>
