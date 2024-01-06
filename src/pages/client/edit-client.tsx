@@ -1,10 +1,8 @@
 import FormWrapper from '@/components/form-wrapper'
 import ClientForm from '@/components/forms/clientForm'
 import Loader from '@/components/loader'
-import axios from 'axios'
-import { useQuery } from 'react-query'
+import useClient from '@/hooks/use-client'
 import { useParams } from 'react-router-dom'
-import { toast } from 'sonner'
 
 const EditClient = () => {
   const params = useParams()
@@ -13,22 +11,7 @@ const EditClient = () => {
     data: client,
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: ['client', params.id],
-    enabled: !!params.id,
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/client/${parseInt(
-          params.id!,
-        )}`,
-      )
-      return data as Client
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error fetching client')
-    },
-  })
+  } = useClient({ id: Number(params.id) })
 
   const canDisplay = !isLoading && !isError && client
 

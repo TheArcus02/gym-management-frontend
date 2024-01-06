@@ -13,23 +13,12 @@ import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
 import Loader from '@/components/loader'
 import { XOctagon } from 'lucide-react'
+import useTrainers from '@/hooks/use-trainers'
 
 const Trainer = () => {
   const queryClient = useQueryClient()
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['trainers'],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/trainer`,
-      )
-      return data as Trainer[]
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error fetching trainers')
-    },
-  })
+  const { data, isLoading, isError } = useTrainers()
 
   const { mutate: deleteTrainer } = useMutation({
     mutationFn: async (id: number) => {

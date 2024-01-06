@@ -26,6 +26,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import useClients from '@/hooks/use-clients'
 import axios from 'axios'
 import {
   Dumbbell,
@@ -33,26 +34,14 @@ import {
   MoreVertical,
   XOctagon,
 } from 'lucide-react'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 
 const Client = () => {
   const queryClient = useQueryClient()
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['clients'],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/client`,
-      )
-      return data as Client[]
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error fetching clients')
-    },
-  })
+  const { data, isLoading, isError } = useClients()
 
   const { mutate: deleteClient } = useMutation({
     mutationFn: async (id: number) => {
