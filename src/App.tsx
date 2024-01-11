@@ -14,6 +14,7 @@ import AssignWorkoutPlan from './pages/client/assign-workout-plan'
 import WorkoutPlan from './pages/workout-plan/workout-plan'
 import AddWorkoutPlan from './pages/workout-plan/add-workout-plan'
 import EditWorkoutPlan from './pages/workout-plan/edit-workout-plan'
+import Training from './pages/training/training'
 
 export default function App() {
   return (
@@ -45,6 +46,11 @@ export default function App() {
             <Route index element={<WorkoutPlan />} />
             <Route path='add' element={<AddWorkoutPlan />} />
             <Route path=':id' element={<EditWorkoutPlan />} />
+          </Route>
+          <Route path='/training'>
+            <Route index element={<Training />} />
+            <Route path='add' element={<h2>Add Training</h2>} />
+            <Route path=':id' element={<h2>Training</h2>} />
           </Route>
         </Route>
         <Route path='*' element={<h1>404</h1>} />

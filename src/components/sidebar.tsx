@@ -36,6 +36,12 @@ const Sidebar = () => {
             label: '',
             icon: Weight,
           },
+          {
+            title: 'Training',
+            link: '/training',
+            label: '',
+            icon: Dumbbell,
+          },
         ]}
       />
     </aside>
