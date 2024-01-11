@@ -1,4 +1,6 @@
 import Loader from '@/components/loader'
+import ObjectCard from '@/components/object-card'
+import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -13,6 +15,7 @@ import { Separator } from '@/components/ui/separator'
 import useTrainings from '@/hooks/use-trainings'
 import axios from 'axios'
 import { XOctagon } from 'lucide-react'
+import { title } from 'process'
 import { useMutation } from 'react-query'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -38,58 +41,37 @@ const Training = () => {
   const canDisplay = !isLoading && !isError && trainings
 
   return (
-    <div className='w-full h-full flex flex-col'>
-      <div className=' flex justify-between items-center'>
-        <h2 className='text-xl font-bold py-5 pl-3'>Trainings</h2>
-        <Link to='/workout-plan/add'>
-          <Button size='sm' className='mr-3'>
-            Add Training
-          </Button>
-        </Link>
-      </div>
-      <Separator />
-      {!canDisplay ? (
-        <Loader />
-      ) : (
-        <ScrollArea className='flex-1'>
-          <div className='p-4 flex flex-wrap w-full gap-5'>
-            {trainings.map((training) => (
-              <Card
-                key={training.id}
-                className='max-w-[350px] w-full'
-              >
-                <CardHeader>
-                  <div className='flex justify-between'>
-                    <CardTitle>{training.name}</CardTitle>
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      onClick={() => deleteTraining(training.id)}
-                    >
-                      <XOctagon />
-                    </Button>
-                  </div>
-                  <CardDescription>
-                    {training.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p>Exercises count: {training.exercises.length}</p>
-                </CardContent>
-                <CardFooter className='flex justify-between'>
-                  <Link to={`/training/${training.id}`}>
-                    <Button variant='outline'>Edit</Button>
-                  </Link>
-                  <Link to={`/training/${training.id}/exercises/`}>
-                    <Button size='sm'>Assign Exercises</Button>
-                  </Link>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </ScrollArea>
-      )}
-    </div>
+    <SectionWrapper
+      title='Trainings'
+      isLoading={!canDisplay}
+      buttonProps={{
+        title: 'Add Training',
+        link: '/training/add',
+      }}
+    >
+      {canDisplay &&
+        trainings.map((training) => (
+          <ObjectCard
+            key={training.id}
+            title={training.name}
+            description={training.description}
+            content={
+              <p>Exercises count: {training.exercises.length}</p>
+            }
+            footer={
+              <>
+                <Link to={`/training/${training.id}`}>
+                  <Button variant='outline'>Edit</Button>
+                </Link>
+                <Link to={`/training/${training.id}/exercise`}>
+                  <Button size='sm'>Manage Exercises</Button>
+                </Link>
+              </>
+            }
+            deleteFunction={() => deleteTraining(training.id)}
+          />
+        ))}
+    </SectionWrapper>
   )
 }
 
