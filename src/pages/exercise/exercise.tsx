@@ -57,16 +57,18 @@ const Exercise = () => {
                     <p>Sets: {(exercise as StrengthExercise).sets}</p>
                     <p>Reps: {(exercise as StrengthExercise).reps}</p>
                     <p>
-                      Weight {(exercise as StrengthExercise).weight}
+                      Weight {(exercise as StrengthExercise).weight}kg
                     </p>
                   </>
                 ) : (
                   <>
                     <p>
                       Duration:{' '}
-                      {(exercise as CardioExercise).duration}
+                      {(exercise as CardioExercise).duration}m
                     </p>
-                    <p>Tempo: {(exercise as CardioExercise).tempo}</p>
+                    <p>
+                      Tempo: {(exercise as CardioExercise).tempo} km/h
+                    </p>
                   </>
                 )}
               </>
