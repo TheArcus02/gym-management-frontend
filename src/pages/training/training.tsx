@@ -1,41 +1,29 @@
-import Loader from '@/components/loader'
 import ObjectCard from '@/components/object-card'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
-import useTrainings from '@/hooks/use-trainings'
+import useDelete from '@/hooks/use-delete'
+import useGetAll from '@/hooks/use-get-all'
 import axios from 'axios'
-import { XOctagon } from 'lucide-react'
-import { title } from 'process'
 import { useMutation } from 'react-query'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 
 const Training = () => {
-  const { data: trainings, isLoading, isError } = useTrainings()
+  const {
+    data: trainings,
+    isLoading,
+    isError,
+  } = useGetAll<Training[]>({
+    queryKey: ['trainings'],
+    url: '/api/training',
+    errorMessage: 'Error fetching trainings',
+  })
 
-  const { mutate: deleteTraining } = useMutation({
-    mutationFn: async (id: number) => {
-      await axios.delete(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/training/${id}`,
-      )
-    },
-    onSuccess: () => {
-      toast.success(`Training deleted successfully`)
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error deleting training')
-    },
+  const { mutate: deleteTraining } = useDelete({
+    url: '/api/training/',
+    successMessage: 'Training deleted successfully',
+    errorMessage: 'Error deleting training',
+    invalidateQueries: ['trainings'],
   })
 
   const canDisplay = !isLoading && !isError && trainings

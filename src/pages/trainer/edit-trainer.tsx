@@ -1,17 +1,29 @@
 import FormWrapper from '@/components/form-wrapper'
 import TrainerForm from '@/components/forms/trainer-form'
 import Loader from '@/components/loader'
+import useGetById from '@/hooks/use-get-by-id'
 import useTrainer from '@/hooks/use-trainer'
 import { useParams } from 'react-router-dom'
 
 const EditTrainer = () => {
   const params = useParams()
 
+  // const {
+  //   data: trainer,
+  //   isLoading,
+  //   isError,
+  // } = useTrainer({ id: Number(params.id) })
+
   const {
     data: trainer,
     isLoading,
     isError,
-  } = useTrainer({ id: Number(params.id) })
+  } = useGetById<Trainer>({
+    queryKey: ['trainer', Number(params.id)],
+    url: `/api/trainer/${params.id}`,
+    errorMessage: 'Error fetching trainer',
+    id: Number(params.id),
+  })
 
   const canDisplay = !isLoading && !isError && trainer
 

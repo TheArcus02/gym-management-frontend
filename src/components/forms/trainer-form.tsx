@@ -11,10 +11,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '../ui/button'
-import { useMutation, useQueryClient } from 'react-query'
-import axios from 'axios'
-import { toast } from 'sonner'
-import { useNavigate } from 'react-router-dom'
+import useAdd from '@/hooks/use-add'
+import useUpdate from '@/hooks/use-update'
 
 const trainerSchema = z.object({
   name: z
@@ -39,9 +37,6 @@ interface TrainerFormProps {
 }
 
 const TrainerForm = ({ trainer }: TrainerFormProps) => {
-  const queryClient = useQueryClient()
-  const navigate = useNavigate()
-
   const form = useForm<z.infer<typeof trainerSchema>>({
     resolver: zodResolver(trainerSchema),
     defaultValues: {
@@ -51,51 +46,23 @@ const TrainerForm = ({ trainer }: TrainerFormProps) => {
     },
   })
 
-  const { mutate: addTrainer } = useMutation({
-    mutationFn: async (values: z.infer<typeof trainerSchema>) => {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/trainer`,
-        {
-          ...values,
-          date: 1,
-        },
-      )
-      return data as Trainer
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries('trainers')
-      toast.success(`Trainer added successfully`)
-      navigate('/trainer')
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error adding trainer')
-    },
+  const { mutate: addTrainer } = useAdd<Trainer>({
+    schema: trainerSchema,
+    url: '/api/trainer',
+    successMessage: 'Trainer added successfully',
+    errorMessage: 'Error adding trainer',
+    invalidateQueries: ['trainers'],
+    redirectUrl: '/trainer',
   })
 
-  const { mutate: updateTrainer } = useMutation({
-    mutationKey: [trainer?.id],
-    mutationFn: async (values: z.infer<typeof trainerSchema>) => {
-      const { data } = await axios.put(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/trainer/${
-          trainer!.id
-        }`,
-        {
-          ...values,
-          date: 1,
-        },
-      )
-      return data as Trainer
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries('trainers')
-      toast.success(`Trainer updated successfully`)
-      navigate('/trainer')
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error updating trainer')
-    },
+  const { mutate: updateTrainer } = useUpdate<Trainer>({
+    schema: trainerSchema,
+    id: trainer!.id,
+    url: '/api/trainer/',
+    successMessage: 'Trainer updated successfully',
+    errorMessage: 'Error updating trainer',
+    invalidateQueries: ['trainers'],
+    redirectUrl: '/trainer',
   })
 
   const onSubmit = (values: z.infer<typeof trainerSchema>) => {
