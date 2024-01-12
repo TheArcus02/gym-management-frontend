@@ -49,7 +49,7 @@ const Training = () => {
                   <Button variant='outline'>Edit</Button>
                 </Link>
                 <Link to={`/training/${training.id}/exercise`}>
-                  <Button size='sm'>Manage Exercises</Button>
+                  <Button size='sm'>Assign Exercises</Button>
                 </Link>
               </>
             }

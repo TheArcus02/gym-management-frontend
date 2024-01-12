@@ -128,7 +128,7 @@ const WorkoutPlanForm = ({ workoutPlan }: WorkoutPlanFormProps) => {
           name='description'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder='This is 5 days per week split...'
