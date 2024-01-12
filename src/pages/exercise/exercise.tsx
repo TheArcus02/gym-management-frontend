@@ -21,7 +21,7 @@ const Exercise = () => {
   })
 
   const { mutate: deleteExercise } = useDelete({
-    url: '/api/exercise/',
+    url: '/api/exercise',
     successMessage: 'Exercise deleted successfully',
     errorMessage: 'Error deleting exercise',
     invalidateQueries: ['exercises'],
