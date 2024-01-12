@@ -18,6 +18,9 @@ import Training from './pages/training/training'
 import AddTraining from './pages/training/add-training'
 import EditTraining from './pages/training/edit-training'
 import AssignExercise from './pages/training/assign-exercise'
+import Exercise from './pages/exercise/exercise'
+import AddExercise from './pages/exercise/add-exercise'
+import EditExercise from './pages/exercise/edit-exercise'
 
 export default function App() {
   return (
@@ -55,6 +58,11 @@ export default function App() {
             <Route path='add' element={<AddTraining />} />
             <Route path=':id' element={<EditTraining />} />
             <Route path=':id/exercise' element={<AssignExercise />} />
+          </Route>
+          <Route path='/exercise'>
+            <Route index element={<Exercise />} />
+            <Route path='add' element={<AddExercise />} />
+            <Route path=':id' element={<EditExercise />} />
           </Route>
         </Route>
         <Route path='*' element={<h1>404</h1>} />

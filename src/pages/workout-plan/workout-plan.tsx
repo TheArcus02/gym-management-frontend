@@ -1,24 +1,10 @@
+import DifficultyIndicator from '@/components/difficulty-indicator'
 import ObjectCard from '@/components/object-card'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
 import useDelete from '@/hooks/use-delete'
 import useGetAll from '@/hooks/use-get-all'
 import { Link } from 'react-router-dom'
-
-const DifficultyIndicator = ({
-  difficulty,
-}: {
-  difficulty: Difficulty
-}) => {
-  switch (difficulty) {
-    case 'EASY':
-      return <span className='text-green-500'>Easy</span>
-    case 'MEDIUM':
-      return <span className='text-yellow-500'>Medium</span>
-    case 'HARD':
-      return <span className='text-red-500'>Hard</span>
-  }
-}
 
 const WorkoutPlan = () => {
   const {

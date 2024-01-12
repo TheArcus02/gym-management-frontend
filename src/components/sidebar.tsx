@@ -1,5 +1,12 @@
 import Nav from './nav'
-import { Dumbbell, LayoutDashboard, User, Weight } from 'lucide-react'
+import {
+  Dumbbell,
+  LayoutDashboard,
+  User,
+  Weight,
+  NotebookPen,
+  NotebookText,
+} from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 
 const Sidebar = () => {
@@ -34,13 +41,19 @@ const Sidebar = () => {
             title: 'Workout Plan',
             link: '/workout-plan',
             label: '',
-            icon: Weight,
+            icon: NotebookText,
           },
           {
             title: 'Training',
             link: '/training',
             label: '',
-            icon: Dumbbell,
+            icon: NotebookPen,
+          },
+          {
+            title: 'Exercise',
+            link: '/exercise',
+            label: '',
+            icon: Weight,
           },
         ]}
       />
