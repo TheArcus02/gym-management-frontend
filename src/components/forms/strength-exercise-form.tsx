@@ -72,7 +72,7 @@ function StrengthExerciseForm({
   const { mutate: updateExercise } = useUpdate<StrengthExercise>({
     schema: strenghtExerciseSchema,
     id: exercise?.id,
-    url: '/api/exercise/',
+    url: '/api/exercise',
     successMessage: 'Exercise updated successfully',
     errorMessage: 'Error updating exercise',
     invalidateQueries: ['exercises'],

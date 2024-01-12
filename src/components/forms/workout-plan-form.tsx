@@ -64,7 +64,7 @@ const WorkoutPlanForm = ({ workoutPlan }: WorkoutPlanFormProps) => {
   const { mutate: updateWorkoutPlan } = useUpdate<WorkoutPlan>({
     schema: workoutPlanSchema,
     id: workoutPlan?.id,
-    url: '/api/workout-plan/',
+    url: '/api/workout-plan',
     successMessage: 'Workout plan updated successfully',
     errorMessage: 'Error updating workout plan',
     invalidateQueries: ['workoutPlans'],

@@ -38,6 +38,7 @@ const WorkoutPlan = () => {
       {canDisplay &&
         workoutPlans.map((workoutPlan) => (
           <ObjectCard
+            key={workoutPlan.id}
             title={workoutPlan.name}
             description={
               <DifficultyIndicator

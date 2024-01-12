@@ -50,7 +50,7 @@ const TrainingForm = ({ training }: TrainingFormProps) => {
   const { mutate: updateTraining } = useUpdate<Training>({
     schema: trainingSchema,
     id: training?.id,
-    url: '/api/training/',
+    url: '/api/training',
     successMessage: 'Training updated successfully',
     errorMessage: 'Error updating training',
     invalidateQueries: ['trainings'],

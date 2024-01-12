@@ -6,6 +6,7 @@ import {
   Weight,
   NotebookPen,
   NotebookText,
+  Anvil,
 } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 
@@ -54,6 +55,12 @@ const Sidebar = () => {
             link: '/exercise',
             label: '',
             icon: Weight,
+          },
+          {
+            title: 'Equipment',
+            link: '/equipment',
+            label: '',
+            icon: Anvil,
           },
         ]}
       />

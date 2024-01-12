@@ -60,7 +60,7 @@ const ClientForm = ({ client }: ClientFormProps) => {
   const { mutate: updateClient } = useUpdate<Client>({
     schema: clientSchema,
     id: client?.id,
-    url: '/api/client/',
+    url: '/api/client',
     successMessage: 'Client updated successfully',
     errorMessage: 'Error updating client',
     invalidateQueries: ['clients'],
