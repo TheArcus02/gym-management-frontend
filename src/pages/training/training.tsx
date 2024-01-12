@@ -3,10 +3,7 @@ import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
 import useDelete from '@/hooks/use-delete'
 import useGetAll from '@/hooks/use-get-all'
-import axios from 'axios'
-import { useMutation } from 'react-query'
 import { Link } from 'react-router-dom'
-import { toast } from 'sonner'
 
 const Training = () => {
   const {

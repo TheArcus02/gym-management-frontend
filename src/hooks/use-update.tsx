@@ -7,7 +7,7 @@ import * as z from 'zod'
 
 interface updateProps {
   schema: z.ZodObject<any, any, any>
-  id: number
+  id: unknown
   url: string
   successMessage?: string
   errorMessage?: string

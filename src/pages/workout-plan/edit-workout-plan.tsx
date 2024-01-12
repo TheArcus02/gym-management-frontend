@@ -1,7 +1,7 @@
 import FormWrapper from '@/components/form-wrapper'
 import WorkoutPlanForm from '@/components/forms/workout-plan-form'
 import Loader from '@/components/loader'
-import useWorkoutPlan from '@/hooks/use-workout-plan'
+import useGetById from '@/hooks/use-get-by-id'
 import { useParams } from 'react-router-dom'
 
 const EditWorkoutPlan = () => {
@@ -11,7 +11,12 @@ const EditWorkoutPlan = () => {
     data: workoutPlan,
     isLoading,
     isError,
-  } = useWorkoutPlan({ id: Number(params.id) })
+  } = useGetById<WorkoutPlan>({
+    queryKey: ['workout-plan', Number(params.id)],
+    url: `/api/workout-plan/${params.id}`,
+    errorMessage: 'Error fetching workout plan',
+    id: Number(params.id),
+  })
 
   const canDisplay = !isLoading && !isError && workoutPlan
 

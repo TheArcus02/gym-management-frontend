@@ -20,7 +20,7 @@ const useDelete = ({
   return useMutation({
     mutationFn: async (id: number) => {
       await axios.delete(
-        `${import.meta.env.VITE_BASE_URL || ''}${url}${id}`,
+        `${import.meta.env.VITE_BASE_URL || ''}${url}/${id}`,
       )
     },
     onSuccess: () => {

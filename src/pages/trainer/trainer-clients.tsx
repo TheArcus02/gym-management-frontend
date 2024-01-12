@@ -9,8 +9,9 @@ import {
 } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+import useGetById from '@/hooks/use-get-by-id'
 import axios from 'axios'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 
@@ -22,21 +23,11 @@ const TrainerClients = () => {
     data: trainer,
     isLoading,
     isError,
-  } = useQuery({
-    queryKey: ['trainer', params.id],
-    enabled: !!params.id,
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${
-          import.meta.env.VITE_BASE_URL || ''
-        }/api/trainer/${parseInt(params.id!)}`,
-      )
-      return data as Trainer
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error fetching trainer')
-    },
+  } = useGetById<Trainer>({
+    queryKey: ['trainer', Number(params.id)],
+    url: `/api/trainer/${params.id}`,
+    errorMessage: 'Error fetching trainer',
+    id: Number(params.id),
   })
 
   const { mutate: removeClient } = useMutation({

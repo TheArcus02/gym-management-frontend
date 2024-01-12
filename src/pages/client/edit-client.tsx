@@ -1,7 +1,7 @@
 import FormWrapper from '@/components/form-wrapper'
 import ClientForm from '@/components/forms/client-form'
 import Loader from '@/components/loader'
-import useClient from '@/hooks/use-client'
+import useGetById from '@/hooks/use-get-by-id'
 import { useParams } from 'react-router-dom'
 
 const EditClient = () => {
@@ -11,7 +11,12 @@ const EditClient = () => {
     data: client,
     isLoading,
     isError,
-  } = useClient({ id: Number(params.id) })
+  } = useGetById<Client>({
+    queryKey: ['client', Number(params.id)],
+    url: `/api/client/${params.id}`,
+    errorMessage: 'Error fetching client',
+    id: Number(params.id),
+  })
 
   const canDisplay = !isLoading && !isError && client
 

@@ -1,3 +1,5 @@
+import ObjectCard from '@/components/object-card'
+import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -58,43 +60,27 @@ const AssignClient = () => {
   const canDisplay = !isLoading && !isError && clients
 
   return (
-    <div className='w-full h-full flex flex-col'>
-      <div className=' flex justify-between items-center'>
-        <h2 className='text-xl font-bold py-5 pl-3'>
-          Clients ready to be assigned
-        </h2>
-      </div>
-      <Separator />
-      {canDisplay ? (
-        <ScrollArea className='flex-1'>
-          <div className='p-4 flex flex-wrap w-full gap-5'>
-            {clients.map((client) => (
-              <Card
-                key={client.id + client.email}
-                className='max-w-[350px] w-full'
-              >
-                <CardHeader>
-                  <CardTitle>
-                    {client.name} {client.surname}
-                  </CardTitle>
-                  <CardDescription>{client.email}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p>weight: {client.weight} kg</p>
-                </CardContent>
-                <CardFooter>
-                  <Button onClick={() => assignClient(client.id)}>
-                    Assign
-                  </Button>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </ScrollArea>
-      ) : (
-        <Loader />
-      )}
-    </div>
+    <SectionWrapper
+      title='Clients ready to be assigned'
+      isLoading={!canDisplay}
+    >
+      {canDisplay &&
+        clients.map((client) => (
+          <ObjectCard
+            key={client.id}
+            title={client.name + ' ' + client.surname}
+            description={client.email}
+            content={<p>Weight: {client.weight} kg</p>}
+            footer={
+              <>
+                <Button onClick={() => assignClient(client.id)}>
+                  Assign
+                </Button>
+              </>
+            }
+          />
+        ))}
+    </SectionWrapper>
   )
 }
 

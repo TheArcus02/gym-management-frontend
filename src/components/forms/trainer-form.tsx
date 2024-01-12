@@ -57,7 +57,7 @@ const TrainerForm = ({ trainer }: TrainerFormProps) => {
 
   const { mutate: updateTrainer } = useUpdate<Trainer>({
     schema: trainerSchema,
-    id: trainer!.id,
+    id: trainer?.id,
     url: '/api/trainer/',
     successMessage: 'Trainer updated successfully',
     errorMessage: 'Error updating trainer',

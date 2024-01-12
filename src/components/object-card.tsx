@@ -11,8 +11,8 @@ import {
 
 interface ObjectCardProps {
   title: string
-  deleteFunction: VoidFunction
-  description?: string
+  deleteFunction?: VoidFunction
+  description?: string | React.ReactNode
   content: React.ReactNode
   footer?: React.ReactNode
 }
@@ -29,13 +29,15 @@ const ObjectCard = ({
       <CardHeader>
         <div className='flex justify-between'>
           <CardTitle>{title}</CardTitle>
-          <Button
-            variant='ghost'
-            size='icon'
-            onClick={() => deleteFunction()}
-          >
-            <XOctagon />
-          </Button>
+          {deleteFunction && (
+            <Button
+              variant='ghost'
+              size='icon'
+              onClick={() => deleteFunction()}
+            >
+              <XOctagon />
+            </Button>
+          )}
         </div>
         {description && (
           <CardDescription>{description}</CardDescription>

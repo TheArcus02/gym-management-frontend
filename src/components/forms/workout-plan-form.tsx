@@ -1,7 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { useMutation, useQueryClient } from 'react-query'
-import { useNavigate } from 'react-router-dom'
 import * as z from 'zod'
 import {
   Form,
@@ -21,8 +19,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '../ui/textarea'
-import axios from 'axios'
-import { toast } from 'sonner'
+import useAdd from '@/hooks/use-add'
+import useUpdate from '@/hooks/use-update'
 
 const workoutPlanSchema = z.object({
   name: z
@@ -45,9 +43,6 @@ interface WorkoutPlanFormProps {
 }
 
 const WorkoutPlanForm = ({ workoutPlan }: WorkoutPlanFormProps) => {
-  const queryClient = useQueryClient()
-  const navigate = useNavigate()
-
   const form = useForm<z.infer<typeof workoutPlanSchema>>({
     resolver: zodResolver(workoutPlanSchema),
     defaultValues: {
@@ -57,51 +52,23 @@ const WorkoutPlanForm = ({ workoutPlan }: WorkoutPlanFormProps) => {
     },
   })
 
-  const { mutate: addWorkoutPlan } = useMutation({
-    mutationFn: async (values: z.infer<typeof workoutPlanSchema>) => {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/workout-plan`,
-        {
-          ...values,
-          date: 1,
-        },
-      )
-      return data as WorkoutPlan
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries('workoutPlans')
-      toast.success('Workout plan added')
-      navigate('/workout-plan')
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Something went wrong')
-    },
+  const { mutate: addWorkoutPlan } = useAdd<WorkoutPlan>({
+    schema: workoutPlanSchema,
+    url: '/api/workout-plan',
+    successMessage: 'Workout plan added successfully',
+    errorMessage: 'Error adding workout plan',
+    invalidateQueries: ['workoutPlans'],
+    redirectUrl: '/workout-plan',
   })
 
-  const { mutate: updateWorkoutPlan } = useMutation({
-    mutationKey: [workoutPlan?.id],
-    mutationFn: async (values: z.infer<typeof workoutPlanSchema>) => {
-      const { data } = await axios.put(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/workout-plan/${
-          workoutPlan?.id
-        }`,
-        {
-          ...values,
-          date: 1,
-        },
-      )
-      return data as WorkoutPlan
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries('workoutPlans')
-      toast.success('Workout plan updated')
-      navigate('/workout-plan')
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Something went wrong')
-    },
+  const { mutate: updateWorkoutPlan } = useUpdate<WorkoutPlan>({
+    schema: workoutPlanSchema,
+    id: workoutPlan?.id,
+    url: '/api/workout-plan/',
+    successMessage: 'Workout plan updated successfully',
+    errorMessage: 'Error updating workout plan',
+    invalidateQueries: ['workoutPlans'],
+    redirectUrl: '/workout-plan',
   })
 
   const onSubmit = (values: z.infer<typeof workoutPlanSchema>) => {

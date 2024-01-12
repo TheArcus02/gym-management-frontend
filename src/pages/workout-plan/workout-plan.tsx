@@ -1,21 +1,9 @@
-import Loader from '@/components/loader'
+import ObjectCard from '@/components/object-card'
+import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-  CardDescription,
-} from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
-import useWorkoutPlans from '@/hooks/use-workout-plans'
-import axios from 'axios'
-import { XOctagon } from 'lucide-react'
-import { useMutation } from 'react-query'
+import useDelete from '@/hooks/use-delete'
+import useGetAll from '@/hooks/use-get-all'
 import { Link } from 'react-router-dom'
-import { toast } from 'sonner'
 
 const DifficultyIndicator = ({
   difficulty,
@@ -33,85 +21,60 @@ const DifficultyIndicator = ({
 }
 
 const WorkoutPlan = () => {
-  const { data: workoutPlans, isLoading, isError } = useWorkoutPlans()
+  const {
+    data: workoutPlans,
+    isLoading,
+    isError,
+  } = useGetAll<WorkoutPlan[]>({
+    queryKey: ['workout-plans'],
+    url: '/api/workout-plan',
+    errorMessage: 'Error fetching workout plans',
+  })
 
-  const { mutate: deleteWorkoutPlan } = useMutation({
-    mutationFn: async (id: number) => {
-      await axios.delete(
-        `${
-          import.meta.env.VITE_BASE_URL || ''
-        }/api/workout-plan/${id}`,
-      )
-    },
-    onSuccess: () => {
-      toast.success(`Workout Plan deleted successfully`)
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error deleting workout plan')
-    },
+  const { mutate: deleteWorkoutPlan } = useDelete({
+    url: '/api/workout-plan',
+    successMessage: 'Workout Plan deleted successfully',
+    errorMessage: 'Error deleting workout plan',
+    invalidateQueries: ['workout-plans'],
   })
 
   const canDisplay = !isLoading && !isError && workoutPlans
+
   return (
-    <div className='w-full h-full flex flex-col'>
-      <div className=' flex justify-between items-center'>
-        <h2 className='text-xl font-bold py-5 pl-3'>Workout Plans</h2>
-        <Link to='/workout-plan/add'>
-          <Button size='sm' className='mr-3'>
-            Add Workout Plan
-          </Button>
-        </Link>
-      </div>
-      <Separator />
-      {!canDisplay ? (
-        <Loader />
-      ) : (
-        <ScrollArea className='flex-1'>
-          <div className='p-4 flex flex-wrap w-full gap-5'>
-            {workoutPlans.map((workoutPlan) => (
-              <Card
-                key={workoutPlan.id}
-                className='max-w-[350px] w-full'
-              >
-                <CardHeader>
-                  <div className='flex justify-between'>
-                    <CardTitle>{workoutPlan.name}</CardTitle>
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      onClick={() =>
-                        deleteWorkoutPlan(workoutPlan.id)
-                      }
-                    >
-                      <XOctagon />
-                    </Button>
-                  </div>
-                  <CardDescription>
-                    <DifficultyIndicator
-                      difficulty={workoutPlan.difficulty}
-                    />
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p>{workoutPlan.description}</p>
-                </CardContent>
-                <CardFooter className='flex justify-between'>
-                  <Link to={`/workout-plan/${workoutPlan.id}`}>
-                    <Button variant='outline'>Edit</Button>
-                  </Link>
-                  <Link
-                    to={`/workout-plan/${workoutPlan.id}/trainings`}
-                  >
-                    <Button size='sm'>Manage Trainings</Button>
-                  </Link>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </ScrollArea>
-      )}
-    </div>
+    <SectionWrapper
+      title='Workout Plans'
+      buttonProps={{
+        title: 'Add Workout Plan',
+        link: '/workout-plan/add',
+      }}
+      isLoading={!canDisplay}
+    >
+      {canDisplay &&
+        workoutPlans.map((workoutPlan) => (
+          <ObjectCard
+            title={workoutPlan.name}
+            description={
+              <DifficultyIndicator
+                difficulty={workoutPlan.difficulty}
+              />
+            }
+            content={<p>{workoutPlan.description}</p>}
+            footer={
+              <>
+                <Link to={`/workout-plan/${workoutPlan.id}`}>
+                  <Button variant='outline'>Edit</Button>
+                </Link>
+                <Link
+                  to={`/workout-plan/${workoutPlan.id}/trainings`}
+                >
+                  <Button size='sm'>Manage Trainings</Button>
+                </Link>
+              </>
+            }
+            deleteFunction={() => deleteWorkoutPlan(workoutPlan.id)}
+          />
+        ))}
+    </SectionWrapper>
   )
 }
 

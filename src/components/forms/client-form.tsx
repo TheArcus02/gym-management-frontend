@@ -11,10 +11,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '../ui/button'
-import { useMutation, useQueryClient } from 'react-query'
-import axios from 'axios'
-import { toast } from 'sonner'
-import { useNavigate } from 'react-router-dom'
+import useAdd from '@/hooks/use-add'
+import useUpdate from '@/hooks/use-update'
 
 const clientSchema = z.object({
   name: z
@@ -40,9 +38,6 @@ interface ClientFormProps {
 }
 
 const ClientForm = ({ client }: ClientFormProps) => {
-  const queryClient = useQueryClient()
-  const navigate = useNavigate()
-
   const form = useForm<z.infer<typeof clientSchema>>({
     resolver: zodResolver(clientSchema),
     defaultValues: {
@@ -53,51 +48,23 @@ const ClientForm = ({ client }: ClientFormProps) => {
     },
   })
 
-  const { mutate: addClient } = useMutation({
-    mutationFn: async (values: z.infer<typeof clientSchema>) => {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/client`,
-        {
-          ...values,
-          date: 1,
-        },
-      )
-      return data as Client
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries('clients')
-      toast.success(`Client added successfully`)
-      navigate('/client')
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error adding client')
-    },
+  const { mutate: addClient } = useAdd<Client>({
+    schema: clientSchema,
+    url: '/api/client',
+    successMessage: 'Client added successfully',
+    errorMessage: 'Error adding client',
+    invalidateQueries: ['clients'],
+    redirectUrl: '/client',
   })
 
-  const { mutate: updateClient } = useMutation({
-    mutationKey: [client?.id],
-    mutationFn: async (values: z.infer<typeof clientSchema>) => {
-      const { data } = await axios.put(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/client/${
-          client!.id
-        }`,
-        {
-          ...values,
-          date: 1,
-        },
-      )
-      return data as Client
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries('clients')
-      toast.success(`Client updated successfully`)
-      navigate('/client')
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error updating client')
-    },
+  const { mutate: updateClient } = useUpdate<Client>({
+    schema: clientSchema,
+    id: client?.id,
+    url: '/api/client/',
+    successMessage: 'Client updated successfully',
+    errorMessage: 'Error updating client',
+    invalidateQueries: ['clients'],
+    redirectUrl: '/client',
   })
 
   const onSubmit = (values: z.infer<typeof clientSchema>) => {
