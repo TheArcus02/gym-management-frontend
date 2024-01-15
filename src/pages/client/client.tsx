@@ -68,6 +68,12 @@ const Client = () => {
                   <p>
                     Has trainer: {client.trainerId ? 'Yes' : 'No'}
                   </p>
+                  <p>
+                    Workout Plan:{' '}
+                    {client.workoutPlan
+                      ? client.workoutPlan.name
+                      : 'None'}
+                  </p>
                 </>
               }
               footer={

@@ -52,6 +52,12 @@ const Exercise = () => {
                   Category:{' '}
                   <CategoryIndicator category={exercise.category} />
                 </p>
+                <p>
+                  Equipment:{' '}
+                  {exercise.equipment
+                    ? exercise.equipment.name
+                    : 'Not assigned'}
+                </p>
                 {exercise.type === 'StrengthExercise' ? (
                   <>
                     <p>Sets: {(exercise as StrengthExercise).sets}</p>

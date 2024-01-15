@@ -13,7 +13,7 @@ interface ObjectCardProps {
   title: string
   deleteFunction?: VoidFunction
   description?: string | React.ReactNode
-  content: React.ReactNode
+  content?: React.ReactNode
   footer?: React.ReactNode
 }
 
@@ -43,7 +43,7 @@ const ObjectCard = ({
           <CardDescription>{description}</CardDescription>
         )}
       </CardHeader>
-      <CardContent>{content}</CardContent>
+      {content && <CardContent>{content}</CardContent>}
       <CardFooter className='flex justify-between'>
         {footer}
       </CardFooter>

@@ -109,6 +109,7 @@ const EquipmentForm = ({ equipment }: EquipmentFormProps) => {
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
+                disabled={!!equipment}
               >
                 <FormControl>
                   <SelectTrigger>
