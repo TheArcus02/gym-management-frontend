@@ -1,14 +1,13 @@
 import ObjectCard from '@/components/object-card'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
+import { useAssignClient } from '@/hooks/use-trainer'
 import axios from 'axios'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
-import { toast } from 'sonner'
 
 const AssignClient = () => {
   const params = useParams()
-  const queryClient = useQueryClient()
 
   const {
     data: clients,
@@ -25,26 +24,7 @@ const AssignClient = () => {
     },
   })
 
-  const { mutate: assignClient } = useMutation({
-    mutationKey: [params.id],
-    mutationFn: async (clientId: number) => {
-      const { data } = await axios.patch(
-        `${
-          import.meta.env.VITE_BASE_URL || ''
-        }/api/client/${clientId}/trainer/${parseInt(params.id!)}`,
-        {},
-      )
-      return data as Client
-    },
-    onSuccess: () => {
-      toast.success(`Client assigned successfully`)
-      queryClient.invalidateQueries('free_clients')
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error assigning client')
-    },
-  })
+  const { mutate: assignClient } = useAssignClient()
 
   const canDisplay = !isLoading && !isError && clients
 
@@ -62,7 +42,14 @@ const AssignClient = () => {
             content={<p>Weight: {client.weight} kg</p>}
             footer={
               <>
-                <Button onClick={() => assignClient(client.id)}>
+                <Button
+                  onClick={() =>
+                    assignClient({
+                      clientId: client.id,
+                      trainerId: parseInt(params.id!),
+                    })
+                  }
+                >
                   Assign
                 </Button>
               </>

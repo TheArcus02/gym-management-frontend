@@ -1,9 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import useGetAll from '@/hooks/use-get-all'
-import useDelete from '@/hooks/use-delete'
 import SectionWrapper from '@/components/section-wrapper'
 import ObjectCard from '@/components/object-card'
+import { useDeleteTrainer, useGetTrainers } from '@/hooks/use-trainer'
 
 const TrainerCardContent = ({
   trainer: trainer,
@@ -19,22 +18,9 @@ const TrainerCardContent = ({
 }
 
 const Trainer = () => {
-  const {
-    data: trainers,
-    isLoading,
-    isError,
-  } = useGetAll<Trainer[]>({
-    queryKey: ['trainers'],
-    url: '/api/trainer',
-    errorMessage: 'Error fetching trainers',
-  })
+  const { data: trainers, isLoading, isError } = useGetTrainers()
 
-  const { mutate: deleteTrainer } = useDelete({
-    url: '/api/trainer',
-    successMessage: 'Trainer deleted successfully',
-    errorMessage: 'Error deleting trainer',
-    invalidateQueries: ['trainers'],
-  })
+  const { mutate: deleteTrainer } = useDeleteTrainer()
 
   const canDisplay = !isLoading && !isError && trainers
 
