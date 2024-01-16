@@ -9,6 +9,38 @@ import { Link } from 'react-router-dom'
 
 type ExerciseArray = (StrengthExercise | CardioExercise)[]
 
+export const ExerciseCardContent = ({
+  exercise,
+}: {
+  exercise: StrengthExercise | CardioExercise
+}) => {
+  return (
+    <>
+      <p>
+        Category: <CategoryIndicator category={exercise.category} />
+      </p>
+      <p>
+        Equipment:{' '}
+        {exercise.equipment
+          ? exercise.equipment.name
+          : 'Not assigned'}
+      </p>
+      {exercise.type === 'StrengthExercise' ? (
+        <>
+          <p>Sets: {(exercise as StrengthExercise).sets}</p>
+          <p>Reps: {(exercise as StrengthExercise).reps}</p>
+          <p>Weight {(exercise as StrengthExercise).weight}kg</p>
+        </>
+      ) : (
+        <>
+          <p>Duration: {(exercise as CardioExercise).duration}m</p>
+          <p>Tempo: {(exercise as CardioExercise).tempo} km/h</p>
+        </>
+      )}
+    </>
+  )
+}
+
 const Exercise = () => {
   const {
     data: exercises,
@@ -46,39 +78,7 @@ const Exercise = () => {
             description={
               <DifficultyIndicator difficulty={exercise.difficulty} />
             }
-            content={
-              <>
-                <p>
-                  Category:{' '}
-                  <CategoryIndicator category={exercise.category} />
-                </p>
-                <p>
-                  Equipment:{' '}
-                  {exercise.equipment
-                    ? exercise.equipment.name
-                    : 'Not assigned'}
-                </p>
-                {exercise.type === 'StrengthExercise' ? (
-                  <>
-                    <p>Sets: {(exercise as StrengthExercise).sets}</p>
-                    <p>Reps: {(exercise as StrengthExercise).reps}</p>
-                    <p>
-                      Weight {(exercise as StrengthExercise).weight}kg
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p>
-                      Duration:{' '}
-                      {(exercise as CardioExercise).duration}m
-                    </p>
-                    <p>
-                      Tempo: {(exercise as CardioExercise).tempo} km/h
-                    </p>
-                  </>
-                )}
-              </>
-            }
+            content={<ExerciseCardContent exercise={exercise} />}
             footer={
               <>
                 <Link to={`/exercise/${exercise.id}`}>

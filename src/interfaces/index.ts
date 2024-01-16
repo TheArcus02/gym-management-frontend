@@ -6,6 +6,10 @@ type ExerciseType = 'StrengthExercise' | 'CardioExercise'
 
 type EquipmentType = 'Dumbells' | 'Barbell' | 'Machine'
 
+type ExerciseObject = StrengthExercise | CardioExercise
+
+type EquipmentObject = Dumbells | Barbell | Machine
+
 interface DbObject {
   id: number
   name: string

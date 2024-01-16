@@ -17,13 +17,13 @@ const AssignEquipment = () => {
     data: equipment,
     isLoading,
     isError,
-  } = useGetAll<(Dumbells | Barbell | Machine)[]>({
+  } = useGetAll<EquipmentObject[]>({
     queryKey: ['equipment'],
     url: `/api/equipment`,
     errorMessage: 'Error fetching equipments',
   })
 
-  const { data: exercise } = useGetById<Exercise>({
+  const { data: exercise } = useGetById<ExerciseObject>({
     queryKey: ['exercise', params.id],
     url: `/api/exercise/${params.id}`,
     errorMessage: 'Error fetching exercise',
@@ -50,7 +50,7 @@ const AssignEquipment = () => {
       ])
 
       const prevEquipment = queryClient.getQueryData<
-        (Dumbells | Barbell | Machine)[]
+        EquipmentObject[]
       >(['equipment'])
 
       const prevExercise = queryClient.getQueryData<Exercise>([
