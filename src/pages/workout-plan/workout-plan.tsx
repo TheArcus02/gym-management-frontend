@@ -2,8 +2,10 @@ import DifficultyIndicator from '@/components/difficulty-indicator'
 import ObjectCard from '@/components/object-card'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
-import useDelete from '@/hooks/use-delete'
-import useGetAll from '@/hooks/use-get-all'
+import {
+  useDeleteWorkoutPlan,
+  useGetWorkoutPlans,
+} from '@/hooks/use-workout-plan'
 import { Link } from 'react-router-dom'
 
 const WorkoutPlan = () => {
@@ -11,18 +13,9 @@ const WorkoutPlan = () => {
     data: workoutPlans,
     isLoading,
     isError,
-  } = useGetAll<WorkoutPlan[]>({
-    queryKey: ['workout-plans'],
-    url: '/api/workout-plan',
-    errorMessage: 'Error fetching workout plans',
-  })
+  } = useGetWorkoutPlans()
 
-  const { mutate: deleteWorkoutPlan } = useDelete({
-    url: '/api/workout-plan',
-    successMessage: 'Workout Plan deleted successfully',
-    errorMessage: 'Error deleting workout plan',
-    invalidateQueries: ['workout-plans'],
-  })
+  const { mutate: deleteWorkoutPlan } = useDeleteWorkoutPlan()
 
   const canDisplay = !isLoading && !isError && workoutPlans
 
