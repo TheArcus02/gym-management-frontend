@@ -2,25 +2,17 @@ import CategoryIndicator from '@/components/category-indicator'
 import ObjectCard from '@/components/object-card'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
+import { useGetAllEquipment } from '@/hooks/use-equipment'
 import {
   useAssignEquipment,
   useGetExercise,
 } from '@/hooks/use-exercise'
-import useGetAll from '@/hooks/use-get-all'
 import { useParams } from 'react-router-dom'
 
 const AssignEquipment = () => {
   const params = useParams()
 
-  const {
-    data: equipment,
-    isLoading,
-    isError,
-  } = useGetAll<EquipmentObject[]>({
-    queryKey: ['equipment'],
-    url: `/api/equipment`,
-    errorMessage: 'Error fetching equipments',
-  })
+  const { data: equipment, isLoading, isError } = useGetAllEquipment()
 
   const { data: exercise } = useGetExercise(Number(params.id))
 

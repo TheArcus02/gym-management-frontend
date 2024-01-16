@@ -97,3 +97,15 @@ export const strenghtExerciseSchema = z.object({
     .number()
     .min(0, { message: 'Weight cannot be negative' }),
 })
+
+export const equipmentSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: 'Name must be at least 2 characters long' })
+    .max(30, { message: 'Name must be at most 30 characters long' }),
+  type: z.enum(['Dumbells', 'Barbell', 'Machine']),
+  weight: z.coerce
+    .number()
+    .min(0, { message: 'Weight must be at least 0' }),
+  category: z.enum(['PUSH', 'PULL', 'LEGS', 'CARDIO']),
+})

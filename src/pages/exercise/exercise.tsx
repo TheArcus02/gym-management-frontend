@@ -3,12 +3,10 @@ import DifficultyIndicator from '@/components/difficulty-indicator'
 import ObjectCard from '@/components/object-card'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
-import useDelete from '@/hooks/use-delete'
 import {
   useDeleteExercise,
   useGetExercises,
 } from '@/hooks/use-exercise'
-import useGetAll from '@/hooks/use-get-all'
 import { Link } from 'react-router-dom'
 
 export const ExerciseCardContent = ({

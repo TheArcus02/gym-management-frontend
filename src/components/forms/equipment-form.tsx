@@ -1,5 +1,3 @@
-import useAdd from '@/hooks/use-add'
-import useUpdate from '@/hooks/use-update'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -20,18 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
-
-const equipmentSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: 'Name must be at least 2 characters long' })
-    .max(30, { message: 'Name must be at most 30 characters long' }),
-  type: z.enum(['Dumbells', 'Barbell', 'Machine']),
-  weight: z.coerce
-    .number()
-    .min(0, { message: 'Weight must be at least 0' }),
-  category: z.enum(['PUSH', 'PULL', 'LEGS', 'CARDIO']),
-})
+import { equipmentSchema } from '@/utils/schema'
+import {
+  useAddEquipment,
+  useUpdateEquipment,
+} from '@/hooks/use-equipment'
 
 interface EquipmentFormProps {
   equipment?: Dumbells | Barbell | Machine
@@ -54,28 +45,16 @@ const EquipmentForm = ({ equipment }: EquipmentFormProps) => {
     },
   })
 
-  const { mutate: addEquipment } = useAdd<Equipment>({
-    schema: equipmentSchema,
-    url: '/api/equipment',
-    successMessage: 'Equipment added successfully',
-    errorMessage: 'Error adding equipment',
-    invalidateQueries: ['equipment'],
-    redirectUrl: '/equipment',
-  })
+  const { mutate: addEquipment } = useAddEquipment()
 
-  const { mutate: updateEquipment } = useUpdate<Equipment>({
-    schema: equipmentSchema,
-    id: equipment?.id,
-    url: '/api/equipment',
-    successMessage: 'Equipment updated successfully',
-    errorMessage: 'Error updating equipment',
-    invalidateQueries: ['equipment'],
-    redirectUrl: '/equipment',
-  })
+  const { mutate: updateEquipment } = useUpdateEquipment()
 
   const onSubmit = (values: z.infer<typeof equipmentSchema>) => {
     if (equipment) {
-      updateEquipment(values)
+      updateEquipment({
+        values: values,
+        id: equipment.id,
+      })
     } else {
       addEquipment(values)
     }

@@ -2,11 +2,11 @@ import CategoryIndicator from '@/components/category-indicator'
 import ObjectCard from '@/components/object-card'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
-import useDelete from '@/hooks/use-delete'
-import useGetAll from '@/hooks/use-get-all'
+import {
+  useDeleteEquipment,
+  useGetAllEquipment,
+} from '@/hooks/use-equipment'
 import { Link } from 'react-router-dom'
-
-type EquipmentArray = (Dumbells | Barbell | Machine)[]
 
 export const EquipmentCardContent = ({
   equipment,
@@ -47,22 +47,9 @@ export const EquipmentCardDescription = ({
 }
 
 const Equipment = () => {
-  const {
-    data: equipment,
-    isLoading,
-    isError,
-  } = useGetAll<EquipmentArray>({
-    queryKey: ['equipment'],
-    url: '/api/equipment',
-    errorMessage: 'Error fetching equipment',
-  })
+  const { data: equipment, isLoading, isError } = useGetAllEquipment()
 
-  const { mutate: deleteEquipment } = useDelete({
-    url: '/api/equipment',
-    successMessage: 'Equipment deleted successfully',
-    errorMessage: 'Error deleting equipment',
-    invalidateQueries: ['equipment'],
-  })
+  const { mutate: deleteEquipment } = useDeleteEquipment()
 
   const canDisplay = !isLoading && !isError && equipment
 
