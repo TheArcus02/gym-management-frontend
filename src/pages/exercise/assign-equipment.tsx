@@ -17,7 +17,7 @@ const AssignEquipment = () => {
     data: equipment,
     isLoading,
     isError,
-  } = useGetAll<Equipment[]>({
+  } = useGetAll<(Dumbells | Barbell | Machine)[]>({
     queryKey: ['equipment'],
     url: `/api/equipment`,
     errorMessage: 'Error fetching equipments',
@@ -31,7 +31,6 @@ const AssignEquipment = () => {
   })
 
   const { mutate: assignEquipment } = useMutation({
-    mutationKey: [params.id],
     mutationFn: async (equipmentId: number) => {
       const { data } = await axios.patch(
         `${
@@ -41,15 +40,54 @@ const AssignEquipment = () => {
         )}/equipment/${equipmentId}`,
         {},
       )
-      return data as Equipment
+      return data as Exercise
     },
-    onSuccess: () => {
-      toast.success(`Equipment assigned successfully`)
-      queryClient.invalidateQueries('equipment')
+    onMutate: async (equipmentId: number) => {
+      await queryClient.cancelQueries([
+        'equipment',
+        'exercise',
+        params.id,
+      ])
+
+      const prevEquipment = queryClient.getQueryData<
+        (Dumbells | Barbell | Machine)[]
+      >(['equipment'])
+
+      const prevExercise = queryClient.getQueryData<Exercise>([
+        'exercise',
+        params.id,
+      ])
+
+      if (prevExercise && prevEquipment) {
+        const updatedEquipment = prevEquipment.find(
+          (e) => e.id === equipmentId,
+        )
+        if (!updatedEquipment) return
+        const newExercise: Exercise = {
+          ...prevExercise,
+          equipment: updatedEquipment,
+        }
+        queryClient.setQueryData<Exercise>(
+          ['exercise', params.id],
+          newExercise,
+        )
+      }
+
+      return { prevEquipment }
     },
-    onError: (error) => {
+    onError: (error, variables, context) => {
       console.log(error)
       toast.error('Error assigning equipment')
+      if (context?.prevEquipment) {
+        queryClient.setQueryData<Equipment[]>(
+          ['equipment'],
+          context.prevEquipment,
+        )
+      }
+    },
+    onSettled: () => {
+      toast.success('Equipment assigned successfully')
+      queryClient.invalidateQueries(['equipment'])
     },
   })
 
