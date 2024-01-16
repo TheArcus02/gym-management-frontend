@@ -4,6 +4,9 @@ import useGetAll from './use-get-all'
 import useGetById from './use-get-by-id'
 import axios from 'axios'
 import { toast } from 'sonner'
+import useAdd from './use-add'
+import { trainerSchema } from '@/utils/schema'
+import useUpdate from './use-update'
 
 export const useGetTrainers = () => {
   return useGetAll<Trainer[]>({
@@ -84,5 +87,27 @@ export const useAssignClient = () => {
       console.log(error)
       toast.error('Error assigning client')
     },
+  })
+}
+
+export const useAddTrainer = () => {
+  return useAdd<Trainer>({
+    schema: trainerSchema,
+    url: '/api/trainer',
+    successMessage: 'Trainer added successfully',
+    errorMessage: 'Error adding trainer',
+    invalidateQueries: ['trainers'],
+    redirectUrl: '/trainer',
+  })
+}
+
+export const useUpdateTrainer = () => {
+  return useUpdate<Trainer>({
+    schema: trainerSchema,
+    url: '/api/trainer',
+    successMessage: 'Trainer updated successfully',
+    errorMessage: 'Error updating trainer',
+    invalidateQueries: ['trainers'],
+    redirectUrl: '/trainer',
   })
 }

@@ -11,26 +11,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '../ui/button'
-import useAdd from '@/hooks/use-add'
-import useUpdate from '@/hooks/use-update'
-
-const trainerSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: 'Name must be at least 2 characters long' })
-    .max(30, { message: 'Name must be at most 30 characters long' }),
-  surname: z
-    .string()
-    .min(2, {
-      message: 'Surname must be at least 2 characters long',
-    })
-    .max(30, {
-      message: 'Surname must be at most 30 characters long',
-    }),
-  salary: z.coerce
-    .number()
-    .min(0, { message: 'Salary cannot be negative' }),
-})
+import { trainerSchema } from '@/utils/schema'
+import { useAddTrainer, useUpdateTrainer } from '@/hooks/use-trainer'
 
 interface TrainerFormProps {
   trainer?: Trainer
@@ -46,28 +28,13 @@ const TrainerForm = ({ trainer }: TrainerFormProps) => {
     },
   })
 
-  const { mutate: addTrainer } = useAdd<Trainer>({
-    schema: trainerSchema,
-    url: '/api/trainer',
-    successMessage: 'Trainer added successfully',
-    errorMessage: 'Error adding trainer',
-    invalidateQueries: ['trainers'],
-    redirectUrl: '/trainer',
-  })
+  const { mutate: addTrainer } = useAddTrainer()
 
-  const { mutate: updateTrainer } = useUpdate<Trainer>({
-    schema: trainerSchema,
-    id: trainer?.id,
-    url: '/api/trainer',
-    successMessage: 'Trainer updated successfully',
-    errorMessage: 'Error updating trainer',
-    invalidateQueries: ['trainers'],
-    redirectUrl: '/trainer',
-  })
+  const { mutate: updateTrainer } = useUpdateTrainer()
 
   const onSubmit = (values: z.infer<typeof trainerSchema>) => {
     if (trainer) {
-      updateTrainer(values)
+      updateTrainer({ values: values, id: trainer.id })
     } else {
       addTrainer(values)
     }

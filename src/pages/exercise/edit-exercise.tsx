@@ -2,7 +2,7 @@ import FormWrapper from '@/components/form-wrapper'
 import CardioExerciseForm from '@/components/forms/cardio-exercise-form'
 import StrengthExerciseForm from '@/components/forms/strength-exercise-form'
 import Loader from '@/components/loader'
-import useGetById from '@/hooks/use-get-by-id'
+import { useGetExercise } from '@/hooks/use-exercise'
 import { useParams } from 'react-router-dom'
 
 const EditExercise = () => {
@@ -12,12 +12,7 @@ const EditExercise = () => {
     data: exercise,
     isLoading,
     isError,
-  } = useGetById<StrengthExercise | CardioExercise>({
-    queryKey: ['exercise', Number(params.id)],
-    url: `/api/exercise/${params.id}`,
-    errorMessage: 'Error fetching exercise',
-    id: Number(params.id),
-  })
+  } = useGetExercise(Number(params.id))
 
   const canDisplay = !isLoading && !isError && exercise
 

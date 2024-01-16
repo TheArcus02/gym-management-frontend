@@ -4,6 +4,9 @@ import useGetAll from './use-get-all'
 import useGetById from './use-get-by-id'
 import axios from 'axios'
 import { toast } from 'sonner'
+import useAdd from './use-add'
+import { trainingSchema } from '@/utils/schema'
+import useUpdate from './use-update'
 
 export const useGetTrainings = () => {
   return useGetAll<Training[]>({
@@ -104,5 +107,27 @@ export const useAssignExercise = () => {
       toast.success('Equipment assigned successfully')
       queryClient.invalidateQueries(['equipment'])
     },
+  })
+}
+
+export const useAddTraining = () => {
+  return useAdd<Training>({
+    schema: trainingSchema,
+    url: '/api/training',
+    successMessage: 'Training added successfully',
+    errorMessage: 'Error adding training',
+    invalidateQueries: ['trainings'],
+    redirectUrl: '/training',
+  })
+}
+
+export const useUpdateTraining = () => {
+  return useUpdate<Training>({
+    schema: trainingSchema,
+    url: '/api/training',
+    successMessage: 'Training updated successfully',
+    errorMessage: 'Error updating training',
+    invalidateQueries: ['trainings'],
+    redirectUrl: '/training',
   })
 }

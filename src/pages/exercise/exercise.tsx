@@ -4,6 +4,10 @@ import ObjectCard from '@/components/object-card'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
 import useDelete from '@/hooks/use-delete'
+import {
+  useDeleteExercise,
+  useGetExercises,
+} from '@/hooks/use-exercise'
 import useGetAll from '@/hooks/use-get-all'
 import { Link } from 'react-router-dom'
 
@@ -40,22 +44,9 @@ export const ExerciseCardContent = ({
 }
 
 const Exercise = () => {
-  const {
-    data: exercises,
-    isLoading,
-    isError,
-  } = useGetAll<ExerciseObject[]>({
-    queryKey: ['exercises'],
-    url: '/api/exercise',
-    errorMessage: 'Error fetching exercises',
-  })
+  const { data: exercises, isLoading, isError } = useGetExercises()
 
-  const { mutate: deleteExercise } = useDelete({
-    url: '/api/exercise',
-    successMessage: 'Exercise deleted successfully',
-    errorMessage: 'Error deleting exercise',
-    invalidateQueries: ['exercises'],
-  })
+  const { mutate: deleteExercise } = useDeleteExercise()
 
   const canDisplay = !isLoading && !isError && exercises
 

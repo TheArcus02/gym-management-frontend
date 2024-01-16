@@ -1,26 +1,18 @@
 import ObjectCard from '@/components/object-card'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
-import useGetAll from '@/hooks/use-get-all'
 import { useParams } from 'react-router-dom'
 import { ExerciseCardContent } from '../exercise/exercise'
 import {
   useAssignExercise,
   useGetTraining,
 } from '@/hooks/use-training'
+import { useGetExercises } from '@/hooks/use-exercise'
 
 const AssignExercise = () => {
   const params = useParams()
 
-  const {
-    data: exercises,
-    isLoading,
-    isError,
-  } = useGetAll<ExerciseObject[]>({
-    queryKey: ['exercises'],
-    url: `/api/exercise`,
-    errorMessage: 'Error fetching exercises',
-  })
+  const { data: exercises, isLoading, isError } = useGetExercises()
 
   const { data: training } = useGetTraining(Number(params.id))
 

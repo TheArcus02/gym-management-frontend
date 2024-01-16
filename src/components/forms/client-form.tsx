@@ -11,27 +11,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '../ui/button'
-import useAdd from '@/hooks/use-add'
-import useUpdate from '@/hooks/use-update'
-
-const clientSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: 'Name must be at least 2 characters long' })
-    .max(30, { message: 'Name must be at most 30 characters long' }),
-  surname: z
-    .string()
-    .min(2, {
-      message: 'Surname must be at least 2 characters long',
-    })
-    .max(30, {
-      message: 'Surname must be at most 30 characters long',
-    }),
-  email: z.string().email({ message: 'Invalid email' }),
-  weight: z.coerce
-    .number()
-    .min(0, { message: 'Weight cannot be negative' }),
-})
+import { clientSchema } from '@/utils/schema'
+import { useAddClient, useUpdateClient } from '@/hooks/use-client'
 
 interface ClientFormProps {
   client?: Client
@@ -48,28 +29,13 @@ const ClientForm = ({ client }: ClientFormProps) => {
     },
   })
 
-  const { mutate: addClient } = useAdd<Client>({
-    schema: clientSchema,
-    url: '/api/client',
-    successMessage: 'Client added successfully',
-    errorMessage: 'Error adding client',
-    invalidateQueries: ['clients'],
-    redirectUrl: '/client',
-  })
+  const { mutate: addClient } = useAddClient()
 
-  const { mutate: updateClient } = useUpdate<Client>({
-    schema: clientSchema,
-    id: client?.id,
-    url: '/api/client',
-    successMessage: 'Client updated successfully',
-    errorMessage: 'Error updating client',
-    invalidateQueries: ['clients'],
-    redirectUrl: '/client',
-  })
+  const { mutate: updateClient } = useUpdateClient()
 
   const onSubmit = (values: z.infer<typeof clientSchema>) => {
     if (client) {
-      updateClient(values)
+      updateClient({ values: values, id: client.id })
     } else {
       addClient(values)
     }

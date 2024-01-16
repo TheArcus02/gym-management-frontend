@@ -18,24 +18,11 @@ import {
 } from '../ui/select'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import useAdd from '@/hooks/use-add'
-import useUpdate from '@/hooks/use-update'
-
-const cardioExerciseSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: 'Name must be at least 2 characters long' })
-    .max(30, { message: 'Name must be at most 30 characters long' }),
-  difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']),
-  category: z.enum(['CARDIO']),
-  type: z.enum(['StrengthExercise', 'CardioExercise']),
-  duration: z.coerce
-    .number()
-    .min(1, { message: 'Duration must be at least 1' }),
-  tempo: z.coerce
-    .number()
-    .min(1, { message: 'Tempo must be at least 1' }),
-})
+import { cardioExerciseSchema } from '@/utils/schema'
+import {
+  useAddCardioExercise,
+  useUpdateCardioExercise,
+} from '@/hooks/use-exercise'
 
 interface CardioExerciseFormProps {
   exercise?: CardioExercise
@@ -56,28 +43,16 @@ const CardioExerciseForm = ({
     },
   })
 
-  const { mutate: addExercise } = useAdd<CardioExercise>({
-    schema: cardioExerciseSchema,
-    url: '/api/exercise',
-    successMessage: 'Exercise added successfully',
-    errorMessage: 'Error adding exercise',
-    invalidateQueries: ['exercises'],
-    redirectUrl: '/exercise',
-  })
+  const { mutate: addExercise } = useAddCardioExercise()
 
-  const { mutate: updateExercise } = useUpdate<CardioExercise>({
-    schema: cardioExerciseSchema,
-    id: exercise?.id,
-    url: '/api/exercise',
-    successMessage: 'Exercise updated successfully',
-    errorMessage: 'Error updating exercise',
-    invalidateQueries: ['exercises'],
-    redirectUrl: '/exercise',
-  })
+  const { mutate: updateExercise } = useUpdateCardioExercise()
 
   const onSubmit = (values: z.infer<typeof cardioExerciseSchema>) => {
     if (exercise) {
-      updateExercise(values)
+      updateExercise({
+        values: values,
+        id: exercise.id,
+      })
     } else {
       addExercise(values)
     }

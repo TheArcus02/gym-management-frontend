@@ -20,25 +20,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
-
-const strenghtExerciseSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: 'Name must be at least 2 characters long' })
-    .max(30, { message: 'Name must be at most 30 characters long' }),
-  difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']),
-  category: z.enum(['PUSH', 'PULL', 'LEGS', 'CARDIO']),
-  type: z.enum(['StrengthExercise', 'CardioExercise']),
-  sets: z.coerce
-    .number()
-    .min(1, { message: 'Sets must be at least 1' }),
-  reps: z.coerce
-    .number()
-    .min(1, { message: 'Reps must be at least 1' }),
-  weight: z.coerce
-    .number()
-    .min(0, { message: 'Weight cannot be negative' }),
-})
+import { strenghtExerciseSchema } from '@/utils/schema'
+import {
+  useAddStrengthExercise,
+  useUpdateStrengthExercise,
+} from '@/hooks/use-exercise'
 
 interface StrengthExerciseFormProps {
   exercise?: StrengthExercise
@@ -60,30 +46,18 @@ function StrengthExerciseForm({
     },
   })
 
-  const { mutate: addExercise } = useAdd<StrengthExercise>({
-    schema: strenghtExerciseSchema,
-    url: '/api/exercise',
-    successMessage: 'Exercise added successfully',
-    errorMessage: 'Error adding exercise',
-    invalidateQueries: ['exercises'],
-    redirectUrl: '/exercise',
-  })
+  const { mutate: addExercise } = useAddStrengthExercise()
 
-  const { mutate: updateExercise } = useUpdate<StrengthExercise>({
-    schema: strenghtExerciseSchema,
-    id: exercise?.id,
-    url: '/api/exercise',
-    successMessage: 'Exercise updated successfully',
-    errorMessage: 'Error updating exercise',
-    invalidateQueries: ['exercises'],
-    redirectUrl: '/exercise',
-  })
+  const { mutate: updateExercise } = useUpdateStrengthExercise()
 
   const onSubmit = (
     values: z.infer<typeof strenghtExerciseSchema>,
   ) => {
     if (exercise) {
-      updateExercise(values)
+      updateExercise({
+        values: values,
+        id: exercise.id,
+      })
     } else {
       addExercise(values)
     }

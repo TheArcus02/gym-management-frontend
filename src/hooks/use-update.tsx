@@ -5,9 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import * as z from 'zod'
 
-interface updateProps {
+interface UpdateProps {
   schema: z.ZodObject<any, any, any>
-  id: unknown
   url: string
   successMessage?: string
   errorMessage?: string
@@ -17,19 +16,21 @@ interface updateProps {
 
 function useUpdate<T>({
   schema,
-  id,
   url,
   successMessage,
   errorMessage,
   invalidateQueries,
   redirectUrl,
-}: updateProps) {
+}: UpdateProps) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  return useMutation<T, any, z.infer<typeof schema>>({
-    mutationKey: [id],
-    mutationFn: async (values) => {
+  return useMutation<
+    T,
+    any,
+    { values: z.infer<typeof schema>; id: number }
+  >({
+    mutationFn: async ({ values, id }) => {
       const { data } = await axios.put(
         `${import.meta.env.VITE_BASE_URL || ''}${url}/${id}`,
         {
@@ -39,7 +40,7 @@ function useUpdate<T>({
       )
       return data as T
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       if (invalidateQueries && invalidateQueries.length)
         queryClient.invalidateQueries(invalidateQueries)
       toast.success(successMessage || `Item updated successfully`)

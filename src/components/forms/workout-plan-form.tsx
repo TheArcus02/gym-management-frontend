@@ -19,24 +19,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '../ui/textarea'
-import useAdd from '@/hooks/use-add'
-import useUpdate from '@/hooks/use-update'
-
-const workoutPlanSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: 'Name must be at least 2 characters long' })
-    .max(30, { message: 'Name must be at most 30 characters long' }),
-  description: z
-    .string()
-    .min(2, {
-      message: 'Description must be at least 2 characters long',
-    })
-    .max(100, {
-      message: 'Description must be at most 100 characters long',
-    }),
-  difficulty: z.enum(['EASY', 'MEDIUM', 'HARD']),
-})
+import { workoutPlanSchema } from '@/utils/schema'
+import {
+  useAddWorkoutPlan,
+  useUpdateWorkoutPlan,
+} from '@/hooks/use-workout-plan'
 
 interface WorkoutPlanFormProps {
   workoutPlan?: WorkoutPlan
@@ -52,28 +39,16 @@ const WorkoutPlanForm = ({ workoutPlan }: WorkoutPlanFormProps) => {
     },
   })
 
-  const { mutate: addWorkoutPlan } = useAdd<WorkoutPlan>({
-    schema: workoutPlanSchema,
-    url: '/api/workout-plan',
-    successMessage: 'Workout plan added successfully',
-    errorMessage: 'Error adding workout plan',
-    invalidateQueries: ['workoutPlans'],
-    redirectUrl: '/workout-plan',
-  })
+  const { mutate: addWorkoutPlan } = useAddWorkoutPlan()
 
-  const { mutate: updateWorkoutPlan } = useUpdate<WorkoutPlan>({
-    schema: workoutPlanSchema,
-    id: workoutPlan?.id,
-    url: '/api/workout-plan',
-    successMessage: 'Workout plan updated successfully',
-    errorMessage: 'Error updating workout plan',
-    invalidateQueries: ['workoutPlans'],
-    redirectUrl: '/workout-plan',
-  })
+  const { mutate: updateWorkoutPlan } = useUpdateWorkoutPlan()
 
   const onSubmit = (values: z.infer<typeof workoutPlanSchema>) => {
     if (workoutPlan) {
-      updateWorkoutPlan(values)
+      updateWorkoutPlan({
+        values: values,
+        id: workoutPlan.id,
+      })
     } else {
       addWorkoutPlan(values)
     }

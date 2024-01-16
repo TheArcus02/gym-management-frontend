@@ -1,5 +1,3 @@
-import useAdd from '@/hooks/use-add'
-import useUpdate from '@/hooks/use-update'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -14,16 +12,11 @@ import {
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
-
-const trainingSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: 'Name must be at least 2 characters long' })
-    .max(30, { message: 'Name must be at most 30 characters long' }),
-  description: z.string().min(2, {
-    message: 'Description must be at least 2 characters long',
-  }),
-})
+import { trainingSchema } from '@/utils/schema'
+import {
+  useAddTraining,
+  useUpdateTraining,
+} from '@/hooks/use-training'
 
 interface TrainingFormProps {
   training?: Training
@@ -38,28 +31,16 @@ const TrainingForm = ({ training }: TrainingFormProps) => {
     },
   })
 
-  const { mutate: addTraining } = useAdd<Training>({
-    schema: trainingSchema,
-    url: '/api/training',
-    successMessage: 'Training added successfully',
-    errorMessage: 'Error adding training',
-    invalidateQueries: ['trainings'],
-    redirectUrl: '/training',
-  })
+  const { mutate: addTraining } = useAddTraining()
 
-  const { mutate: updateTraining } = useUpdate<Training>({
-    schema: trainingSchema,
-    id: training?.id,
-    url: '/api/training',
-    successMessage: 'Training updated successfully',
-    errorMessage: 'Error updating training',
-    invalidateQueries: ['trainings'],
-    redirectUrl: '/training',
-  })
+  const { mutate: updateTraining } = useUpdateTraining()
 
   const onSubmit = (values: z.infer<typeof trainingSchema>) => {
     if (training) {
-      updateTraining(values)
+      updateTraining({
+        values: values,
+        id: training.id,
+      })
     } else {
       addTraining(values)
     }
