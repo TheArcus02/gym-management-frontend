@@ -27,6 +27,23 @@ import {
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
+export const ClientCardContent = ({
+  client: client,
+}: {
+  client: Client
+}) => {
+  return (
+    <>
+      <p>Weight: {client.weight} kg</p>
+      <p>Has trainer: {client.trainerId ? 'Yes' : 'No'}</p>
+      <p>
+        Workout Plan:{' '}
+        {client.workoutPlan ? client.workoutPlan.name : 'None'}
+      </p>
+    </>
+  )
+}
+
 const Client = () => {
   const {
     data: clients,
@@ -62,20 +79,7 @@ const Client = () => {
               key={client.id}
               title={client.name + ' ' + client.surname}
               description={client.email}
-              content={
-                <>
-                  <p>Weight: {client.weight} kg</p>
-                  <p>
-                    Has trainer: {client.trainerId ? 'Yes' : 'No'}
-                  </p>
-                  <p>
-                    Workout Plan:{' '}
-                    {client.workoutPlan
-                      ? client.workoutPlan.name
-                      : 'None'}
-                  </p>
-                </>
-              }
+              content={<ClientCardContent client={client} />}
               footer={
                 <>
                   <Link to={`/client/${client.id}`}>

@@ -5,6 +5,19 @@ import useDelete from '@/hooks/use-delete'
 import SectionWrapper from '@/components/section-wrapper'
 import ObjectCard from '@/components/object-card'
 
+const TrainerCardContent = ({
+  trainer: trainer,
+}: {
+  trainer: Trainer
+}) => {
+  return (
+    <>
+      <p>Salary: ${trainer.salary}</p>
+      <p>Clients: {trainer.clients.length}</p>
+    </>
+  )
+}
+
 const Trainer = () => {
   const {
     data: trainers,
@@ -39,12 +52,7 @@ const Trainer = () => {
           <ObjectCard
             key={trainer.id}
             title={trainer.name + ' ' + trainer.surname}
-            content={
-              <>
-                <p>Salary: ${trainer.salary}</p>
-                <p>Clients: {trainer.clients.length}</p>
-              </>
-            }
+            content={<TrainerCardContent trainer={trainer} />}
             footer={
               <>
                 <Link to={`/trainer/${trainer.id}`}>

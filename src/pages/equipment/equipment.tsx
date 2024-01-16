@@ -8,6 +8,44 @@ import { Link } from 'react-router-dom'
 
 type EquipmentArray = (Dumbells | Barbell | Machine)[]
 
+export const EquipmentCardContent = ({
+  equipment,
+}: {
+  equipment: EquipmentObject
+}) => {
+  return (
+    <>
+      <p>Type: {equipment.type}</p>
+      {equipment.type === 'Dumbells' ||
+      equipment.type === 'Barbell' ? (
+        <p>
+          Weight: {(equipment as Dumbells | Barbell).weight}
+          kg
+        </p>
+      ) : (
+        <p>
+          Category:{' '}
+          <CategoryIndicator
+            category={(equipment as Machine).category}
+          />
+        </p>
+      )}
+    </>
+  )
+}
+
+export const EquipmentCardDescription = ({
+  equipment,
+}: {
+  equipment: EquipmentObject
+}) => {
+  return !equipment.ocupied ? (
+    <span className='text-green-500'>Free</span>
+  ) : (
+    <span className='text-yellow-500'>Occupied</span>
+  )
+}
+
 const Equipment = () => {
   const {
     data: equipment,
@@ -43,31 +81,9 @@ const Equipment = () => {
             key={equipment.id}
             title={equipment.name}
             description={
-              !equipment.ocupied ? (
-                <span className='text-green-500'>Free</span>
-              ) : (
-                <span className='text-yellow-500'>Occupied</span>
-              )
+              <EquipmentCardDescription equipment={equipment} />
             }
-            content={
-              <>
-                <p>Type: {equipment.type}</p>
-                {equipment.type === 'Dumbells' ||
-                equipment.type === 'Barbell' ? (
-                  <p>
-                    Weight: {(equipment as Dumbells | Barbell).weight}
-                    kg
-                  </p>
-                ) : (
-                  <p>
-                    Category:{' '}
-                    <CategoryIndicator
-                      category={(equipment as Machine).category}
-                    />
-                  </p>
-                )}
-              </>
-            }
+            content={<EquipmentCardContent equipment={equipment} />}
             footer={
               <Link to={`/equipment/${equipment.id}`}>
                 <Button variant='outline'>Edit</Button>

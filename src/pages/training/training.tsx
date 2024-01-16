@@ -5,6 +5,14 @@ import useDelete from '@/hooks/use-delete'
 import useGetAll from '@/hooks/use-get-all'
 import { Link } from 'react-router-dom'
 
+export const TrainingCardContent = ({
+  training,
+}: {
+  training: Training
+}) => {
+  return <p>Exercises count: {training.exercises.length}</p>
+}
+
 const Training = () => {
   const {
     data: trainings,
@@ -40,9 +48,7 @@ const Training = () => {
             key={training.id}
             title={training.name}
             description={training.description}
-            content={
-              <p>Exercises count: {training.exercises.length}</p>
-            }
+            content={<TrainingCardContent training={training} />}
             footer={
               <>
                 <Link to={`/training/${training.id}`}>

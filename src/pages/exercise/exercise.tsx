@@ -7,12 +7,10 @@ import useDelete from '@/hooks/use-delete'
 import useGetAll from '@/hooks/use-get-all'
 import { Link } from 'react-router-dom'
 
-type ExerciseArray = (StrengthExercise | CardioExercise)[]
-
 export const ExerciseCardContent = ({
   exercise,
 }: {
-  exercise: StrengthExercise | CardioExercise
+  exercise: ExerciseObject
 }) => {
   return (
     <>
@@ -46,7 +44,7 @@ const Exercise = () => {
     data: exercises,
     isLoading,
     isError,
-  } = useGetAll<ExerciseArray>({
+  } = useGetAll<ExerciseObject[]>({
     queryKey: ['exercises'],
     url: '/api/exercise',
     errorMessage: 'Error fetching exercises',

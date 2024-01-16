@@ -1,21 +1,12 @@
-import Loader from '@/components/loader'
 import ObjectCard from '@/components/object-card'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
 import useGetById from '@/hooks/use-get-by-id'
 import axios from 'axios'
 import { useMutation, useQueryClient } from 'react-query'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { toast } from 'sonner'
+import { ClientCardContent } from '../client/client'
 
 const TrainerClients = () => {
   const params = useParams()
@@ -69,6 +60,7 @@ const TrainerClients = () => {
             key={client.id}
             title={client.name + ' ' + client.surname}
             description={client.email}
+            content={<ClientCardContent client={client} />}
             footer={
               <Button
                 variant='destructive'
