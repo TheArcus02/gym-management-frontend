@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button } from './ui/button'
 import { Separator } from './ui/separator'
 import Loader from './loader'
 import { ScrollArea } from './ui/scroll-area'
+import { ArrowLeft } from 'lucide-react'
 interface SectionWrapperProps {
   title: string
   isLoading: boolean
@@ -19,10 +20,20 @@ const SectionWrapper = ({
   isLoading,
   children,
 }: SectionWrapperProps) => {
+  const navigate = useNavigate()
   return (
     <div className='w-full h-full flex flex-col'>
       <div className=' flex justify-between items-center'>
-        <h2 className='text-xl font-bold py-5 pl-3'>{title}</h2>
+        <div className='flex items-center mx-2'>
+          <Button
+            size='icon'
+            variant='ghost'
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft className='h-6 w-6' />
+          </Button>
+          <h2 className='text-xl font-bold py-5 ml-1'>{title}</h2>
+        </div>
         {buttonProps && (
           <Link to={buttonProps.link}>
             <Button size='sm' className='mr-3'>
