@@ -125,6 +125,7 @@ const EquipmentForm = ({ equipment }: EquipmentFormProps) => {
                     <SelectItem value='PUSH'>Push</SelectItem>
                     <SelectItem value='PULL'>Pull</SelectItem>
                     <SelectItem value='LEGS'>Legs</SelectItem>
+                    <SelectItem value='CARDIO'>Cardio</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

@@ -131,3 +131,63 @@ export const useUpdateTraining = () => {
     redirectUrl: '/training',
   })
 }
+
+export const useUnassignExercise = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      trainingId,
+      exerciseId,
+    }: AssignTrainingParams) => {
+      const { data } = await axios.delete(
+        `${
+          import.meta.env.VITE_BASE_URL || ''
+        }/api/training/${trainingId}/exercise/${exerciseId}`,
+        {},
+      )
+      return data as Training
+    },
+    onMutate: async ({ trainingId, exerciseId }) => {
+      await queryClient.cancelQueries([
+        'exercises',
+        'training',
+        trainingId,
+      ])
+
+      const prevTraining = queryClient.getQueryData<Training>([
+        'training',
+        trainingId,
+      ])
+
+      if (prevTraining) {
+        const newTraining: Training = {
+          ...prevTraining,
+          exercises: prevTraining.exercises.filter(
+            (e) => e.id !== exerciseId,
+          ),
+        }
+        queryClient.setQueryData<Training>(
+          ['training', trainingId],
+          newTraining,
+        )
+      }
+
+      return { prevTraining }
+    },
+    onError: (error, variables, context) => {
+      console.log(error)
+      toast.error('Error assigning exercise')
+      if (context?.prevTraining) {
+        queryClient.setQueryData<Training>(
+          ['training', variables.trainingId],
+          context.prevTraining,
+        )
+      }
+    },
+    onSettled: () => {
+      toast.success('Equipment assigned successfully')
+      queryClient.invalidateQueries(['equipment'])
+    },
+  })
+}

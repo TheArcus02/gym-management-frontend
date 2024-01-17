@@ -6,6 +6,7 @@ import { ExerciseCardContent } from '../exercise/exercise'
 import {
   useAssignExercise,
   useGetTraining,
+  useUnassignExercise,
 } from '@/hooks/use-training'
 import { useGetExercises } from '@/hooks/use-exercise'
 
@@ -17,6 +18,8 @@ const AssignExercise = () => {
   const { data: training } = useGetTraining(Number(params.id))
 
   const { mutate: assignExercise } = useAssignExercise()
+
+  const { mutate: unassignExercise } = useUnassignExercise()
 
   const canDisplay = !isLoading && !isError && training && exercises
 
@@ -33,7 +36,12 @@ const AssignExercise = () => {
                 <>
                   <Button disabled>Assigned</Button>
                   <Button
-                    onClick={() => undefined}
+                    onClick={() =>
+                      unassignExercise({
+                        exerciseId: exercise.id,
+                        trainingId: training.id,
+                      })
+                    }
                     variant='destructive'
                   >
                     Unassign
