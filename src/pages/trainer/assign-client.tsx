@@ -1,28 +1,14 @@
 import ObjectCard from '@/components/object-card'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
+import { useGetFreeClients } from '@/hooks/use-client'
 import { useAssignClient } from '@/hooks/use-trainer'
-import axios from 'axios'
-import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
 const AssignClient = () => {
   const params = useParams()
 
-  const {
-    data: clients,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ['free_clients'],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_BASE_URL || ''}/api/client`,
-      )
-
-      return (data as Client[]).filter((client) => !client.trainerId)
-    },
-  })
+  const { data: clients, isLoading, isError } = useGetFreeClients()
 
   const { mutate: assignClient } = useAssignClient()
 

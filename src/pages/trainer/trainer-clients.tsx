@@ -3,7 +3,7 @@ import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
 import { useParams } from 'react-router-dom'
 import { ClientCardContent } from '../client/client'
-import { useGetTrainer, useRemoveClient } from '@/hooks/use-trainer'
+import { useGetTrainer, useUnassignClient } from '@/hooks/use-trainer'
 
 const TrainerClients = () => {
   const params = useParams()
@@ -14,7 +14,7 @@ const TrainerClients = () => {
     isError,
   } = useGetTrainer(Number(params.id))
 
-  const { mutate: removeClient } = useRemoveClient()
+  const { mutate: unassignClient } = useUnassignClient()
 
   const canDisplay = !isLoading && !isError && trainer
 
@@ -38,9 +38,14 @@ const TrainerClients = () => {
               <Button
                 variant='destructive'
                 size='sm'
-                onClick={() => removeClient(client.id)}
+                onClick={() =>
+                  unassignClient({
+                    clientId: client.id,
+                    trainerId: trainer.id,
+                  })
+                }
               >
-                Remove
+                Unassign
               </Button>
             }
           />

@@ -34,30 +34,6 @@ export const useDeleteTrainer = () => {
   })
 }
 
-export const useRemoveClient = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: async (clientId: number) => {
-      const { data } = await axios.patch(
-        `${
-          import.meta.env.VITE_BASE_URL || ''
-        }/api/client/${clientId}/trainer`,
-        {},
-      )
-      return data as Client
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(['trainer', 'trainers'])
-      toast.success(`Client removed successfully`)
-    },
-    onError: (error) => {
-      console.log(error)
-      toast.error('Error removing client')
-    },
-  })
-}
-
 interface AssignClientParams {
   clientId: number
   trainerId: number
@@ -74,18 +50,72 @@ export const useAssignClient = () => {
       const { data } = await axios.patch(
         `${
           import.meta.env.VITE_BASE_URL || ''
-        }/api/client/${clientId}/trainer/${trainerId}`,
+        }/api/trainer/${trainerId}/client/${clientId}`,
         {},
       )
-      return data as Client
+      return data as Trainer
     },
-    onSuccess: () => {
-      toast.success(`Client assigned successfully`)
-      queryClient.invalidateQueries('free_clients')
+    onMutate: async ({ clientId, trainerId }) => {
+      await queryClient.cancelQueries([
+        'clients',
+        'free_clients',
+        'trainer',
+        trainerId,
+      ])
+
+      const prevClients = queryClient.getQueryData<Client[]>([
+        'free_clients',
+      ])
+
+      const prevTrainer = queryClient.getQueryData<Trainer>([
+        'trainer',
+        trainerId,
+      ])
+
+      if (prevClients && prevTrainer) {
+        const newClients: Client[] = prevClients.filter(
+          (c) => c.id !== clientId,
+        )
+        queryClient.setQueryData<Client[]>(
+          ['free_clients'],
+          newClients,
+        )
+
+        const newClient = prevClients.find((c) => c.id === clientId)
+        if (!newClient) return
+        const newTrainer: Trainer = {
+          ...prevTrainer,
+          clients: [...prevTrainer.clients, newClient],
+        }
+        queryClient.setQueryData<Trainer>(
+          ['trainer', trainerId],
+          newTrainer,
+        )
+      }
+
+      return { prevClients, prevTrainer }
     },
-    onError: (error) => {
+    onError: (error, variables, context) => {
       console.log(error)
       toast.error('Error assigning client')
+      if (context?.prevClients) {
+        queryClient.setQueryData<Client[]>(
+          ['clients'],
+          context.prevClients,
+        )
+      }
+      if (context?.prevTrainer) {
+        queryClient.setQueryData<Trainer>(
+          ['trainer', variables.trainerId],
+          context.prevTrainer,
+        )
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['clients', 'trainer'])
+    },
+    onSuccess: () => {
+      toast.success('Client assigned successfully')
     },
   })
 }
@@ -109,5 +139,62 @@ export const useUpdateTrainer = () => {
     errorMessage: 'Error updating trainer',
     invalidateQueries: ['trainers'],
     redirectUrl: '/trainer',
+  })
+}
+
+export const useUnassignClient = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ clientId }: AssignClientParams) => {
+      const { data } = await axios.delete(
+        `${
+          import.meta.env.VITE_BASE_URL || ''
+        }/api/client/${clientId}/trainer`,
+        {},
+      )
+      return data as Client
+    },
+    onMutate: async ({ clientId, trainerId }) => {
+      await queryClient.cancelQueries(['trainer', trainerId])
+
+      const prevTrainer = queryClient.getQueryData<Trainer>([
+        'trainer',
+        trainerId,
+      ])
+
+      if (prevTrainer) {
+        const newClients = prevTrainer.clients.filter(
+          (c) => c.id !== clientId,
+        )
+        const newTrainer: Trainer = {
+          ...prevTrainer,
+          clients: newClients,
+        }
+
+        queryClient.setQueryData<Trainer>(
+          ['trainer', trainerId],
+          newTrainer,
+        )
+      }
+
+      return { prevTrainer }
+    },
+    onError: (error, variables, context) => {
+      console.log(error)
+      toast.error('Error Unassigning client')
+      if (context?.prevTrainer) {
+        queryClient.setQueryData<Trainer>(
+          ['training', variables.trainerId],
+          context.prevTrainer,
+        )
+      }
+    },
+    onSettled: (variables) => {
+      queryClient.invalidateQueries(['trainer', variables?.trainerId])
+    },
+    onSuccess: () => {
+      toast.success('Client Unassigned successfully')
+    },
   })
 }
