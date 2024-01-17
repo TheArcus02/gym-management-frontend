@@ -34,7 +34,7 @@ export const useDeleteTraining = () => {
   })
 }
 
-interface AssignTrainingParams {
+interface AssignExerciseParams {
   trainingId: number
   exerciseId: number
 }
@@ -46,7 +46,7 @@ export const useAssignExercise = () => {
     mutationFn: async ({
       trainingId,
       exerciseId,
-    }: AssignTrainingParams) => {
+    }: AssignExerciseParams) => {
       const { data } = await axios.patch(
         `${
           import.meta.env.VITE_BASE_URL || ''
@@ -90,7 +90,7 @@ export const useAssignExercise = () => {
     },
     onError: (error, variables, context) => {
       console.log(error)
-      toast.error('Error assigning exercise')
+      toast.error('Error assigning training')
       if (context?.prevExercises) {
         queryClient.setQueryData<
           (StrengthExercise | CardioExercise)[]
@@ -104,8 +104,8 @@ export const useAssignExercise = () => {
       }
     },
     onSettled: () => {
-      toast.success('Equipment assigned successfully')
-      queryClient.invalidateQueries(['equipment'])
+      toast.success('Exercise assigned successfully')
+      queryClient.invalidateQueries(['exercises'])
     },
   })
 }
@@ -139,7 +139,7 @@ export const useUnassignExercise = () => {
     mutationFn: async ({
       trainingId,
       exerciseId,
-    }: AssignTrainingParams) => {
+    }: AssignExerciseParams) => {
       const { data } = await axios.delete(
         `${
           import.meta.env.VITE_BASE_URL || ''
@@ -177,7 +177,7 @@ export const useUnassignExercise = () => {
     },
     onError: (error, variables, context) => {
       console.log(error)
-      toast.error('Error assigning exercise')
+      toast.error('Error Unassigning exercise')
       if (context?.prevTraining) {
         queryClient.setQueryData<Training>(
           ['training', variables.trainingId],
@@ -186,8 +186,10 @@ export const useUnassignExercise = () => {
       }
     },
     onSettled: () => {
-      toast.success('Equipment assigned successfully')
-      queryClient.invalidateQueries(['equipment'])
+      queryClient.invalidateQueries(['exercises'])
+    },
+    onSuccess: () => {
+      toast.success('Exercise Unassigned successfully')
     },
   })
 }

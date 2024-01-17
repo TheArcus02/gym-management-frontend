@@ -8,6 +8,19 @@ import {
 } from '@/hooks/use-workout-plan'
 import { Link } from 'react-router-dom'
 
+const WorkoutPlanCardContent = ({
+  workoutPlan,
+}: {
+  workoutPlan: WorkoutPlan
+}) => {
+  return (
+    <>
+      <p>{workoutPlan.description}</p>
+      <p>Trainings Count: {workoutPlan.trainings.length}</p>
+    </>
+  )
+}
+
 const WorkoutPlan = () => {
   const {
     data: workoutPlans,
@@ -38,16 +51,16 @@ const WorkoutPlan = () => {
                 difficulty={workoutPlan.difficulty}
               />
             }
-            content={<p>{workoutPlan.description}</p>}
+            content={
+              <WorkoutPlanCardContent workoutPlan={workoutPlan} />
+            }
             footer={
               <>
                 <Link to={`/workout-plan/${workoutPlan.id}`}>
                   <Button variant='outline'>Edit</Button>
                 </Link>
-                <Link
-                  to={`/workout-plan/${workoutPlan.id}/trainings`}
-                >
-                  <Button size='sm'>Manage Trainings</Button>
+                <Link to={`/workout-plan/${workoutPlan.id}/training`}>
+                  <Button size='sm'>Assign Trainings</Button>
                 </Link>
               </>
             }

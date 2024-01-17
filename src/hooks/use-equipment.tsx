@@ -7,7 +7,7 @@ import useUpdate from './use-update'
 
 export const useGetAllEquipment = () => {
   return useGetAll<EquipmentObject[]>({
-    queryKey: ['equipment'],
+    queryKey: ['all-equipment'],
     url: '/api/equipment',
     errorMessage: 'Error fetching equipment',
   })
@@ -27,7 +27,7 @@ export const useDeleteEquipment = () => {
     url: '/api/equipment',
     successMessage: 'Equipment deleted successfully',
     errorMessage: 'Error deleting equipment',
-    invalidateQueries: ['equipment'],
+    invalidateQueries: ['all-equipment'],
   })
 }
 
@@ -37,7 +37,7 @@ export const useAddEquipment = () => {
     url: '/api/equipment',
     successMessage: 'Equipment added successfully',
     errorMessage: 'Error adding equipment',
-    invalidateQueries: ['equipment'],
+    invalidateQueries: ['all-equipment'],
     redirectUrl: '/equipment',
   })
 }
@@ -48,7 +48,7 @@ export const useUpdateEquipment = () => {
     url: '/api/equipment',
     successMessage: 'Equipment updated successfully',
     errorMessage: 'Error updating equipment',
-    invalidateQueries: ['equipment'],
+    invalidateQueries: ['all-equipment'],
     redirectUrl: '/equipment',
   })
 }

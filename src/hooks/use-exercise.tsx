@@ -60,14 +60,14 @@ export const useAssignEquipment = () => {
     },
     onMutate: async ({ exerciseId, equipmentId }) => {
       await queryClient.cancelQueries([
-        'equipment',
+        'all-equipment',
         'exercise',
         exerciseId,
       ])
 
       const prevEquipment = queryClient.getQueryData<
         EquipmentObject[]
-      >(['equipment'])
+      >(['all-equipment'])
 
       const prevExercise = queryClient.getQueryData<Exercise>([
         'exercise',
@@ -96,14 +96,16 @@ export const useAssignEquipment = () => {
       toast.error('Error assigning equipment')
       if (context?.prevEquipment) {
         queryClient.setQueryData<Equipment[]>(
-          ['equipment'],
+          ['all-equipment'],
           context.prevEquipment,
         )
       }
     },
     onSettled: () => {
+      queryClient.invalidateQueries(['all-equipment'])
+    },
+    onSuccess: () => {
       toast.success('Equipment assigned successfully')
-      queryClient.invalidateQueries(['equipment'])
     },
   })
 }

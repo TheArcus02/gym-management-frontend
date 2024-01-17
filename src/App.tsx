@@ -25,6 +25,7 @@ import AssignEquipment from './pages/exercise/assign-equipment'
 import Equipment from './pages/equipment/equipment'
 import AddEquipment from './pages/equipment/add-equipment'
 import EditEquipment from './pages/equipment/edit-equipment'
+import AssignTraining from './pages/workout-plan/assign-training'
 
 export default function App() {
   return (
@@ -56,6 +57,7 @@ export default function App() {
             <Route index element={<WorkoutPlan />} />
             <Route path='add' element={<AddWorkoutPlan />} />
             <Route path=':id' element={<EditWorkoutPlan />} />
+            <Route path=':id/training' element={<AssignTraining />} />
           </Route>
           <Route path='/training'>
             <Route index element={<Training />} />
