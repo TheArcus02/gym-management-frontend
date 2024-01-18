@@ -8,10 +8,16 @@ import { useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
 import { toast } from 'sonner'
 
-export const useGetWorkoutPlans = () => {
+export const useGetWorkoutPlans = ({
+  search,
+}: {
+  search?: string
+}) => {
   return useGetAll<WorkoutPlan[]>({
     queryKey: ['workout-plans'],
-    url: '/api/workout-plan',
+    url: search
+      ? `/api/workout-plan/search?name=${search}`
+      : '/api/workout-plan',
     errorMessage: 'Error fetching workout plans',
   })
 }

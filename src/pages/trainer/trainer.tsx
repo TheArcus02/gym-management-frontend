@@ -3,8 +3,12 @@ import { Link } from 'react-router-dom'
 import SectionWrapper from '@/components/section-wrapper'
 import ObjectCard from '@/components/object-card'
 import { useDeleteTrainer, useGetTrainers } from '@/hooks/use-trainer'
+import { useEffect } from 'react'
 
-const TrainerCardContent = ({
+import SearchInput from '@/components/search-input'
+import useSearch from '@/hooks/use-search'
+
+export const TrainerCardContent = ({
   trainer: trainer,
 }: {
   trainer: Trainer
@@ -18,9 +22,22 @@ const TrainerCardContent = ({
 }
 
 const Trainer = () => {
-  const { data: trainers, isLoading, isError } = useGetTrainers()
+  const [search, setSearch] = useSearch()
+
+  const {
+    data: trainers,
+    refetch,
+    isLoading,
+    isError,
+  } = useGetTrainers({
+    search: search,
+  })
 
   const { mutate: deleteTrainer } = useDeleteTrainer()
+
+  useEffect(() => {
+    refetch()
+  }, [refetch, search])
 
   const canDisplay = !isLoading && !isError && trainers
 
@@ -33,6 +50,10 @@ const Trainer = () => {
         link: '/trainer/add',
       }}
     >
+      <SearchInput
+        handleInputChange={(e) => setSearch(e.target.value)}
+        placeholder='Search trainers...'
+      />
       {canDisplay &&
         trainers.map((trainer) => (
           <ObjectCard

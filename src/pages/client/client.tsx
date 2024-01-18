@@ -1,4 +1,5 @@
 import ObjectCard from '@/components/object-card'
+import SearchInput from '@/components/search-input'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,12 +20,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useDeleteClient, useGetClients } from '@/hooks/use-client'
+import { useDebounce } from '@/hooks/use-debounce'
 import {
   Dumbbell,
   GanttChartSquare,
   MoreVertical,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 
 export const ClientCardContent = ({
   client: client,
@@ -44,9 +47,33 @@ export const ClientCardContent = ({
 }
 
 const Client = () => {
-  const { data: clients, isLoading, isError } = useGetClients()
+  const [searchParams, setSerchParams] = useSearchParams()
+  const initialSearch = searchParams.get('name') || ''
+  const [search, setSearch] = useState(initialSearch || '')
+  const debouncedSearch = useDebounce<string>(search, 500)
+
+  const {
+    data: clients,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetClients({
+    search: search,
+  })
 
   const { mutate: deleteClient } = useDeleteClient()
+
+  useEffect(() => {
+    refetch()
+    if (!debouncedSearch) {
+      setSerchParams({})
+      return
+    }
+    setSerchParams({
+      name: debouncedSearch,
+      surname: debouncedSearch,
+    })
+  }, [setSerchParams, refetch, debouncedSearch])
 
   const canDisplay = !isLoading && !isError && clients
   return (
@@ -59,6 +86,10 @@ const Client = () => {
           link: '/client/add',
         }}
       >
+        <SearchInput
+          handleInputChange={(e) => setSearch(e.target.value)}
+          placeholder='Search clients...'
+        />
         {canDisplay &&
           clients.map((client) => (
             <ObjectCard

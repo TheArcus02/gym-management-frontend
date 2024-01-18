@@ -8,10 +8,12 @@ import useAdd from './use-add'
 import { clientSchema } from '@/utils/schema'
 import useUpdate from './use-update'
 
-export const useGetClients = () => {
+export const useGetClients = ({ search }: { search?: string }) => {
   return useGetAll<Client[]>({
     queryKey: ['clients'],
-    url: '/api/client',
+    url: search
+      ? `/api/client/search?name=${search}&surname=${search}`
+      : '/api/client',
     errorMessage: 'Error fetching clients',
   })
 }

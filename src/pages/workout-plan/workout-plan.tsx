@@ -1,12 +1,16 @@
 import DifficultyIndicator from '@/components/difficulty-indicator'
 import ObjectCard from '@/components/object-card'
+import SearchInput from '@/components/search-input'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
+import { useDebounce } from '@/hooks/use-debounce'
+import useSearch from '@/hooks/use-search'
 import {
   useDeleteWorkoutPlan,
   useGetWorkoutPlans,
 } from '@/hooks/use-workout-plan'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 
 const WorkoutPlanCardContent = ({
   workoutPlan,
@@ -22,13 +26,22 @@ const WorkoutPlanCardContent = ({
 }
 
 const WorkoutPlan = () => {
+  const [search, setSearch] = useSearch()
+
   const {
     data: workoutPlans,
     isLoading,
     isError,
-  } = useGetWorkoutPlans()
+    refetch,
+  } = useGetWorkoutPlans({
+    search: search,
+  })
 
   const { mutate: deleteWorkoutPlan } = useDeleteWorkoutPlan()
+
+  useEffect(() => {
+    refetch()
+  }, [refetch, search])
 
   const canDisplay = !isLoading && !isError && workoutPlans
 
@@ -41,6 +54,11 @@ const WorkoutPlan = () => {
       }}
       isLoading={!canDisplay}
     >
+      <SearchInput
+        value={search}
+        handleInputChange={(e) => setSearch(e.target.value)}
+        placeholder='Search workout plans...'
+      />
       {canDisplay &&
         workoutPlans.map((workoutPlan) => (
           <ObjectCard

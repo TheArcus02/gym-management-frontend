@@ -8,10 +8,12 @@ import useAdd from './use-add'
 import { trainerSchema } from '@/utils/schema'
 import useUpdate from './use-update'
 
-export const useGetTrainers = () => {
+export const useGetTrainers = ({ search }: { search?: string }) => {
   return useGetAll<Trainer[]>({
     queryKey: ['trainers'],
-    url: '/api/trainer',
+    url: search
+      ? `/api/trainer/search?name=${search}&surname=${search}`
+      : '/api/trainer',
     errorMessage: 'Error fetching trainers',
   })
 }
