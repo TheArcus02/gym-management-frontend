@@ -13,7 +13,7 @@ import { useGetExercises } from '@/hooks/use-exercise'
 const AssignExercise = () => {
   const params = useParams()
 
-  const { data: exercises, isLoading, isError } = useGetExercises()
+  const { data: exercises, isLoading, isError } = useGetExercises({})
 
   const { data: training } = useGetTraining(Number(params.id))
 

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useQuery } from 'react-query'
 import { toast } from 'sonner'
 
@@ -26,7 +26,18 @@ function useGetById<T>({
     },
     onError: (error) => {
       console.log(error)
-      toast.error(errorMessage || 'Error fetching by id data')
+
+      let axiosError
+
+      if (error instanceof AxiosError) {
+        axiosError = error.response?.data.message || error.message
+      }
+
+      toast.error(
+        `${
+          errorMessage || 'Error fetching by id data'
+        }: ${axiosError}`,
+      )
     },
   })
 }

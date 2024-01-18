@@ -14,6 +14,8 @@ const AssignClient = () => {
 
   const canDisplay = !isLoading && !isError && clients
 
+  console.log(clients)
+
   return (
     <SectionWrapper
       title='Clients ready to be assigned'

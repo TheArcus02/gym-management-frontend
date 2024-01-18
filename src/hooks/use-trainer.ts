@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import useAdd from './use-add'
 import { trainerSchema } from '@/utils/schema'
 import useUpdate from './use-update'
+import { useNavigate } from 'react-router-dom'
 
 export const useGetTrainers = ({ search }: { search?: string }) => {
   return useGetAll<Trainer[]>({
@@ -43,6 +44,7 @@ interface AssignClientParams {
 
 export const useAssignClient = () => {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   return useMutation({
     mutationFn: async ({
@@ -116,8 +118,9 @@ export const useAssignClient = () => {
     onSettled: () => {
       queryClient.invalidateQueries(['clients', 'trainer'])
     },
-    onSuccess: () => {
+    onSuccess: (variables) => {
       toast.success('Client assigned successfully')
+      navigate(`/trainer/${variables.id}/clients`)
     },
   })
 }

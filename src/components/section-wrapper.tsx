@@ -3,10 +3,13 @@ import { Button } from './ui/button'
 import { Separator } from './ui/separator'
 import Loader from './loader'
 import { ScrollArea } from './ui/scroll-area'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Ban } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from './ui/alert'
 interface SectionWrapperProps {
   title: string
   isLoading: boolean
+  isError?: boolean
+  errorMessage?: string
   buttonProps?: {
     title: string
     link: string
@@ -18,9 +21,12 @@ const SectionWrapper = ({
   title,
   buttonProps,
   isLoading,
+  isError,
+  errorMessage,
   children,
 }: SectionWrapperProps) => {
   const navigate = useNavigate()
+
   return (
     <div className='w-full h-full flex flex-col'>
       <div className=' flex justify-between items-center'>
@@ -43,7 +49,17 @@ const SectionWrapper = ({
         )}
       </div>
       <Separator />
-      {isLoading ? (
+      {isError ? (
+        <div className='flex items-center justify-center h-full'>
+          <Alert className='max-w-3xl'>
+            <Ban className='h-4 w-4' />
+            <AlertTitle>Something went wrong</AlertTitle>
+            <AlertDescription>
+              {errorMessage || 'Please try again later'}
+            </AlertDescription>
+          </Alert>
+        </div>
+      ) : isLoading ? (
         <Loader />
       ) : (
         <ScrollArea className='flex-1'>

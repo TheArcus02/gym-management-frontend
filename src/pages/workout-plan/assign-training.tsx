@@ -13,7 +13,7 @@ import { TrainingCardContent } from '../training/training'
 const AssignTraining = () => {
   const params = useParams()
 
-  const { data: trainings, isLoading, isError } = useGetTrainings()
+  const { data: trainings, isLoading, isError } = useGetTrainings({})
 
   const { data: workoutPlan } = useGetWorkoutPlan(Number(params.id))
 

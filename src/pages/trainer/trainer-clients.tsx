@@ -22,6 +22,7 @@ const TrainerClients = () => {
     <SectionWrapper
       title='Trainer Clients'
       isLoading={!canDisplay}
+      isError={isError}
       buttonProps={{
         title: 'Assign Client',
         link: `/trainer/${trainer?.id}/clients/assign`,

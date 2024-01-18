@@ -12,7 +12,7 @@ const AssignTrainer = () => {
     data: trainers,
     isLoading: isTrainersLoading,
     isError: isTrainersError,
-  } = useGetTrainers()
+  } = useGetTrainers({})
 
   const {
     data: client,

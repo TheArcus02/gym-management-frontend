@@ -12,7 +12,11 @@ import { useParams } from 'react-router-dom'
 const AssignEquipment = () => {
   const params = useParams()
 
-  const { data: equipment, isLoading, isError } = useGetAllEquipment()
+  const {
+    data: equipment,
+    isLoading,
+    isError,
+  } = useGetAllEquipment({})
 
   const { data: exercise } = useGetExercise(Number(params.id))
 

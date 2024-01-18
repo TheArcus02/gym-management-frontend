@@ -28,9 +28,18 @@ const useDelete = ({
         queryClient.invalidateQueries(invalidateQueries)
       toast.success(successMessage || `Deleted successfully`)
     },
-    onError: (error: AxiosError) => {
+    onError: (error) => {
       console.log(error)
-      toast.error(errorMessage || 'Error deleting')
+
+      let axiosError
+
+      if (error instanceof AxiosError) {
+        axiosError = error.response?.data.message || error.message
+      }
+
+      toast.error(
+        `${errorMessage || 'Error deleting item'}: ${axiosError}`,
+      )
     },
   })
 }

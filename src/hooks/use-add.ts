@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useMutation, useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -44,7 +44,16 @@ function useAdd<T>({
     },
     onError: (error) => {
       console.log(error)
-      toast.error(errorMessage || 'Error adding item')
+
+      let axiosError
+
+      if (error instanceof AxiosError) {
+        axiosError = error.response?.data.message || error.message
+      }
+
+      toast.error(
+        `${errorMessage || 'Error adding item'}: ${axiosError}`,
+      )
     },
   })
 }

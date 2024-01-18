@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { UseQueryResult, useQuery } from 'react-query'
 import { toast } from 'sonner'
 
@@ -25,7 +25,16 @@ function useGetAll<T>({
     },
     onError: (error) => {
       console.log(error)
-      toast.error(errorMessage || 'Error fetching data')
+
+      let axiosError
+
+      if (error instanceof AxiosError) {
+        axiosError = error.response?.data.message || error.message
+      }
+
+      toast.error(
+        `${errorMessage || 'Error fetching all data'}: ${axiosError}`,
+      )
     },
     select: selectFn,
   })
