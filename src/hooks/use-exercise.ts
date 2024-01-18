@@ -11,10 +11,12 @@ import {
 } from '@/utils/schema'
 import useUpdate from './use-update'
 
-export const useGetExercises = () => {
+export const useGetExercises = ({ search }: SearchableQuery) => {
   return useGetAll<ExerciseObject[]>({
     queryKey: ['exercises'],
-    url: '/api/exercise',
+    url: search
+      ? `/api/exercise/search?name=${search}`
+      : '/api/exercise',
     errorMessage: 'Error fetching exercises',
   })
 }

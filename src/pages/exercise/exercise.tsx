@@ -1,12 +1,15 @@
 import CategoryIndicator from '@/components/category-indicator'
 import DifficultyIndicator from '@/components/difficulty-indicator'
 import ObjectCard from '@/components/object-card'
+import SearchInput from '@/components/search-input'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
 import {
   useDeleteExercise,
   useGetExercises,
 } from '@/hooks/use-exercise'
+import useSearch from '@/hooks/use-search'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 export const ExerciseCardContent = ({
@@ -42,9 +45,22 @@ export const ExerciseCardContent = ({
 }
 
 const Exercise = () => {
-  const { data: exercises, isLoading, isError } = useGetExercises()
+  const [search, setSearch] = useSearch()
+
+  const {
+    data: exercises,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetExercises({
+    search: search,
+  })
 
   const { mutate: deleteExercise } = useDeleteExercise()
+
+  useEffect(() => {
+    refetch()
+  }, [search, refetch])
 
   const canDisplay = !isLoading && !isError && exercises
 
@@ -57,6 +73,10 @@ const Exercise = () => {
         link: '/exercise/add',
       }}
     >
+      <SearchInput
+        handleInputChange={(e) => setSearch(e.target.value)}
+        placeholder='Search exercises...'
+      />
       {canDisplay &&
         exercises.map((exercise) => (
           <ObjectCard

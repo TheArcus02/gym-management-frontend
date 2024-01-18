@@ -5,10 +5,12 @@ import useGetAll from './use-get-all'
 import useGetById from './use-get-by-id'
 import useUpdate from './use-update'
 
-export const useGetAllEquipment = () => {
+export const useGetAllEquipment = ({ search }: SearchableQuery) => {
   return useGetAll<EquipmentObject[]>({
     queryKey: ['all-equipment'],
-    url: '/api/equipment',
+    url: search
+      ? `/api/equipment/search?name=${search}`
+      : '/api/equipment',
     errorMessage: 'Error fetching equipment',
   })
 }

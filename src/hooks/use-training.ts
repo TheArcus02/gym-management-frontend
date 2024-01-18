@@ -8,10 +8,12 @@ import useAdd from './use-add'
 import { trainingSchema } from '@/utils/schema'
 import useUpdate from './use-update'
 
-export const useGetTrainings = () => {
+export const useGetTrainings = ({ search }: SearchableQuery) => {
   return useGetAll<Training[]>({
     queryKey: ['trainings'],
-    url: '/api/training',
+    url: search
+      ? `/api/training/search?name=${search}`
+      : '/api/training',
     errorMessage: 'Error fetching trainings',
   })
 }

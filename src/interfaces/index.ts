@@ -76,3 +76,7 @@ interface Barbell extends Equipment {
 interface Machine extends Equipment {
   category: Category
 }
+
+interface SearchableQuery {
+  search?: string
+}

@@ -4,7 +4,6 @@ import SectionWrapper from '@/components/section-wrapper'
 import ObjectCard from '@/components/object-card'
 import { useDeleteTrainer, useGetTrainers } from '@/hooks/use-trainer'
 import { useEffect } from 'react'
-
 import SearchInput from '@/components/search-input'
 import useSearch from '@/hooks/use-search'
 

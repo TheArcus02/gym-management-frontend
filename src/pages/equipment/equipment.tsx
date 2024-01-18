@@ -1,11 +1,14 @@
 import CategoryIndicator from '@/components/category-indicator'
 import ObjectCard from '@/components/object-card'
+import SearchInput from '@/components/search-input'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
 import {
   useDeleteEquipment,
   useGetAllEquipment,
 } from '@/hooks/use-equipment'
+import useSearch from '@/hooks/use-search'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 export const EquipmentCardContent = ({
@@ -47,9 +50,22 @@ export const EquipmentCardDescription = ({
 }
 
 const Equipment = () => {
-  const { data: equipment, isLoading, isError } = useGetAllEquipment()
+  const [search, setSearch] = useSearch()
+
+  const {
+    data: equipment,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetAllEquipment({
+    search: search,
+  })
 
   const { mutate: deleteEquipment } = useDeleteEquipment()
+
+  useEffect(() => {
+    refetch()
+  }, [search, refetch])
 
   const canDisplay = !isLoading && !isError && equipment
 
@@ -62,6 +78,10 @@ const Equipment = () => {
         link: '/equipment/add',
       }}
     >
+      <SearchInput
+        handleInputChange={(e) => setSearch(e.target.value)}
+        placeholder='Search equipment...'
+      />
       {canDisplay &&
         equipment.map((equipment) => (
           <ObjectCard

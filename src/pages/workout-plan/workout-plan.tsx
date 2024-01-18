@@ -3,14 +3,13 @@ import ObjectCard from '@/components/object-card'
 import SearchInput from '@/components/search-input'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
-import { useDebounce } from '@/hooks/use-debounce'
 import useSearch from '@/hooks/use-search'
 import {
   useDeleteWorkoutPlan,
   useGetWorkoutPlans,
 } from '@/hooks/use-workout-plan'
-import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 const WorkoutPlanCardContent = ({
   workoutPlan,
@@ -55,7 +54,6 @@ const WorkoutPlan = () => {
       isLoading={!canDisplay}
     >
       <SearchInput
-        value={search}
         handleInputChange={(e) => setSearch(e.target.value)}
         placeholder='Search workout plans...'
       />

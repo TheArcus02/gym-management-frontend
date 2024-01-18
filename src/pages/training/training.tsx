@@ -1,10 +1,13 @@
 import ObjectCard from '@/components/object-card'
+import SearchInput from '@/components/search-input'
 import SectionWrapper from '@/components/section-wrapper'
 import { Button } from '@/components/ui/button'
+import useSearch from '@/hooks/use-search'
 import {
   useDeleteTraining,
   useGetTrainings,
 } from '@/hooks/use-training'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 export const TrainingCardContent = ({
@@ -16,9 +19,22 @@ export const TrainingCardContent = ({
 }
 
 const Training = () => {
-  const { data: trainings, isLoading, isError } = useGetTrainings()
+  const [search, setSearch] = useSearch()
+
+  const {
+    data: trainings,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetTrainings({
+    search: search,
+  })
 
   const { mutate: deleteTraining } = useDeleteTraining()
+
+  useEffect(() => {
+    refetch()
+  }, [refetch, search])
 
   const canDisplay = !isLoading && !isError && trainings
 
@@ -31,6 +47,10 @@ const Training = () => {
         link: '/training/add',
       }}
     >
+      <SearchInput
+        handleInputChange={(e) => setSearch(e.target.value)}
+        placeholder='Search trainings...'
+      />
       {canDisplay &&
         trainings.map((training) => (
           <ObjectCard

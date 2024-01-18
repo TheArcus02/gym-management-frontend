@@ -20,14 +20,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { useDeleteClient, useGetClients } from '@/hooks/use-client'
-import { useDebounce } from '@/hooks/use-debounce'
+import useSearch from '@/hooks/use-search'
 import {
   Dumbbell,
   GanttChartSquare,
   MoreVertical,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 export const ClientCardContent = ({
   client: client,
@@ -47,10 +47,7 @@ export const ClientCardContent = ({
 }
 
 const Client = () => {
-  const [searchParams, setSerchParams] = useSearchParams()
-  const initialSearch = searchParams.get('name') || ''
-  const [search, setSearch] = useState(initialSearch || '')
-  const debouncedSearch = useDebounce<string>(search, 500)
+  const [search, setSearch] = useSearch()
 
   const {
     data: clients,
@@ -65,15 +62,7 @@ const Client = () => {
 
   useEffect(() => {
     refetch()
-    if (!debouncedSearch) {
-      setSerchParams({})
-      return
-    }
-    setSerchParams({
-      name: debouncedSearch,
-      surname: debouncedSearch,
-    })
-  }, [setSerchParams, refetch, debouncedSearch])
+  }, [refetch, search])
 
   const canDisplay = !isLoading && !isError && clients
   return (
