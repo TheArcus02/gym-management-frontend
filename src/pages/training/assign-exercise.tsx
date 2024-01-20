@@ -9,11 +9,22 @@ import {
   useUnassignExercise,
 } from '@/hooks/use-training'
 import { useGetExercises } from '@/hooks/use-exercise'
+import useSearch from '@/hooks/use-search'
+import { useEffect } from 'react'
+import SearchInput from '@/components/search-input'
 
 const AssignExercise = () => {
+  const [search, setSearch] = useSearch()
   const params = useParams()
 
-  const { data: exercises, isLoading, isError } = useGetExercises({})
+  const {
+    data: exercises,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetExercises({
+    search,
+  })
 
   const { data: training } = useGetTraining(Number(params.id))
 
@@ -23,8 +34,16 @@ const AssignExercise = () => {
 
   const canDisplay = !isLoading && !isError && training && exercises
 
+  useEffect(() => {
+    refetch()
+  }, [refetch, search])
+
   return (
     <SectionWrapper title='Assign Equipment' isLoading={!canDisplay}>
+      <SearchInput
+        placeholder='Search for equipment'
+        handleInputChange={(e) => setSearch(e.target.value)}
+      />
       {canDisplay &&
         exercises.map((exercise) => (
           <ObjectCard

@@ -8,15 +8,22 @@ import {
 } from '@/hooks/use-client'
 import { useGetWorkoutPlans } from '@/hooks/use-workout-plan'
 import { WorkoutPlanCardContent } from '../workout-plan/workout-plan'
+import useSearch from '@/hooks/use-search'
+import { useEffect } from 'react'
+import SearchInput from '@/components/search-input'
 
 const AssignWorkoutPlan = () => {
+  const [search, setSearch] = useSearch()
   const params = useParams()
 
   const {
     data: workoutPlans,
     isLoading: isWorkoutPlansLoading,
     isError: isWorkoutPlansError,
-  } = useGetWorkoutPlans({})
+    refetch,
+  } = useGetWorkoutPlans({
+    search,
+  })
 
   const {
     data: client,
@@ -25,6 +32,10 @@ const AssignWorkoutPlan = () => {
   } = useGetClient(parseInt(params.id!))
 
   const { mutate: assignWorkoutPlan } = useAssignWorkoutPlan()
+
+  useEffect(() => {
+    refetch()
+  }, [refetch, search])
 
   const canDisplay =
     !isClientLoading &&
@@ -38,6 +49,10 @@ const AssignWorkoutPlan = () => {
       title='Assign Trainer to Client'
       isLoading={!canDisplay}
     >
+      <SearchInput
+        placeholder='Search for a workout plan'
+        handleInputChange={(e) => setSearch(e.target.value)}
+      />
       {canDisplay &&
         workoutPlans.map((workoutPlan) => (
           <ObjectCard

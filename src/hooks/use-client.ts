@@ -8,7 +8,7 @@ import useAdd from './use-add'
 import { clientSchema } from '@/utils/schema'
 import useUpdate from './use-update'
 
-export const useGetClients = ({ search }: { search?: string }) => {
+export const useGetClients = ({ search }: SearchableQuery) => {
   return useGetAll<Client[]>({
     queryKey: ['clients'],
     url: search
@@ -18,10 +18,12 @@ export const useGetClients = ({ search }: { search?: string }) => {
   })
 }
 
-export const useGetFreeClients = () => {
+export const useGetFreeClients = ({ search }: SearchableQuery) => {
   return useGetAll<Client[]>({
     queryKey: ['free_clients'],
-    url: '/api/client',
+    url: search
+      ? `/api/client/search?name=${search}&surname=${search}`
+      : '/api/client',
     errorMessage: 'Error fetching clients',
     selectFn: (data) => data.filter((client) => !client.trainerId),
   })

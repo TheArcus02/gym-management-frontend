@@ -4,15 +4,22 @@ import SectionWrapper from '@/components/section-wrapper'
 import ObjectCard from '@/components/object-card'
 import { useGetTrainers } from '@/hooks/use-trainer'
 import { useAssignTrainer, useGetClient } from '@/hooks/use-client'
+import useSearch from '@/hooks/use-search'
+import { useEffect } from 'react'
+import SearchInput from '@/components/search-input'
 
 const AssignTrainer = () => {
+  const [search, setSearch] = useSearch()
   const params = useParams()
 
   const {
     data: trainers,
     isLoading: isTrainersLoading,
     isError: isTrainersError,
-  } = useGetTrainers({})
+    refetch,
+  } = useGetTrainers({
+    search,
+  })
 
   const {
     data: client,
@@ -21,6 +28,10 @@ const AssignTrainer = () => {
   } = useGetClient(parseInt(params.id!))
 
   const { mutate: assignTrainer } = useAssignTrainer()
+
+  useEffect(() => {
+    refetch()
+  }, [refetch, search])
 
   const canDisplay =
     !isClientLoading &&
@@ -34,6 +45,10 @@ const AssignTrainer = () => {
       title='Assign Trainer to Client'
       isLoading={!canDisplay}
     >
+      <SearchInput
+        placeholder='Search for a trainer'
+        handleInputChange={(e) => setSearch(e.target.value)}
+      />
       {canDisplay &&
         trainers.map((trainer) => (
           <ObjectCard
