@@ -123,6 +123,82 @@ export const useAssignTrainer = () => {
   })
 }
 
+export const useAssignWorkoutPlan = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      clientId,
+      workoutPlanId,
+    }: {
+      clientId: number
+      workoutPlanId: number
+    }) => {
+      const { data } = await axios.patch(
+        `${
+          import.meta.env.VITE_BASE_URL || ''
+        }/api/client/${clientId}/workout-plan/${workoutPlanId}`,
+      )
+      return data as Client
+    },
+    onMutate: async ({ clientId, workoutPlanId }) => {
+      await queryClient.cancelQueries([
+        'workout-plans',
+        'client',
+        clientId,
+      ])
+
+      const prevWorkoutPlans = queryClient.getQueryData<
+        WorkoutPlan[]
+      >(['workout-plans'])
+
+      const prevClient = queryClient.getQueryData<Client>([
+        'client',
+        clientId,
+      ])
+
+      if (prevWorkoutPlans && prevClient) {
+        const updatedWorkoutPlan = prevWorkoutPlans.find(
+          (t) => t.id === workoutPlanId,
+        )
+        if (!updatedWorkoutPlan) return
+        const newClient: Client = {
+          ...prevClient,
+          workoutPlan: updatedWorkoutPlan,
+        }
+        queryClient.setQueryData<Client>(
+          ['client', clientId],
+          newClient,
+        )
+      }
+
+      return { prevWorkoutPlans, prevClient }
+    },
+    onError: (error, variables, context) => {
+      console.log(error)
+      toast.error('Error assigning workout plan')
+      if (context?.prevWorkoutPlans) {
+        queryClient.setQueryData<WorkoutPlan[]>(
+          ['workout-plans'],
+          context.prevWorkoutPlans,
+        )
+      }
+      if (context?.prevClient) {
+        queryClient.setQueryData<Client>(
+          ['client', variables.clientId],
+          context.prevClient,
+        )
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['workout-plans', 'client'])
+    },
+    onSuccess: () => {
+      toast.success('Workout plan assigned successfully')
+    },
+  })
+}
+
 export const useAddClient = () => {
   return useAdd<Client>({
     schema: clientSchema,

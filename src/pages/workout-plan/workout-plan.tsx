@@ -11,7 +11,7 @@ import {
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-const WorkoutPlanCardContent = ({
+export const WorkoutPlanCardContent = ({
   workoutPlan,
 }: {
   workoutPlan: WorkoutPlan
