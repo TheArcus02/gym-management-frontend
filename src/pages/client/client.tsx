@@ -36,6 +36,7 @@ export const ClientCardContent = ({
 }) => {
   return (
     <>
+      <p>Email: {client.email}</p>
       <p>Weight: {client.weight} kg</p>
       <p>Has trainer: {client.trainerId ? 'Yes' : 'No'}</p>
       <p>
@@ -84,7 +85,9 @@ const Client = () => {
             <ObjectCard
               key={client.id}
               title={client.name + ' ' + client.surname}
-              description={client.email}
+              description={new Date(
+                client.createdAt,
+              ).toLocaleDateString()}
               content={<ClientCardContent client={client} />}
               footer={
                 <>

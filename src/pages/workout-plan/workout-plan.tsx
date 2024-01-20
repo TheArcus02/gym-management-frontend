@@ -18,6 +18,10 @@ export const WorkoutPlanCardContent = ({
 }) => {
   return (
     <>
+      <DifficultyIndicator
+        difficulty={workoutPlan.difficulty}
+        className='mb-4'
+      />
       <p>{workoutPlan.description}</p>
       <p>Trainings Count: {workoutPlan.trainings.length}</p>
     </>
@@ -62,11 +66,9 @@ const WorkoutPlan = () => {
           <ObjectCard
             key={workoutPlan.id}
             title={workoutPlan.name}
-            description={
-              <DifficultyIndicator
-                difficulty={workoutPlan.difficulty}
-              />
-            }
+            description={new Date(
+              workoutPlan.createdAt,
+            ).toLocaleDateString()}
             content={
               <WorkoutPlanCardContent workoutPlan={workoutPlan} />
             }

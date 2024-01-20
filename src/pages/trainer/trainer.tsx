@@ -59,6 +59,9 @@ const Trainer = () => {
             key={trainer.id}
             title={trainer.name + ' ' + trainer.surname}
             content={<TrainerCardContent trainer={trainer} />}
+            description={new Date(
+              trainer.createdAt,
+            ).toLocaleDateString()}
             footer={
               <>
                 <Link to={`/trainer/${trainer.id}`}>

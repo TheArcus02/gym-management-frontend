@@ -33,10 +33,7 @@ function useUpdate<T>({
     mutationFn: async ({ values, id }) => {
       const { data } = await axios.put(
         `${import.meta.env.VITE_BASE_URL || ''}${url}/${id}`,
-        {
-          ...values,
-          date: 1,
-        },
+        values,
       )
       return data as T
     },

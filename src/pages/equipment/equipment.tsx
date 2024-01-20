@@ -18,6 +18,9 @@ export const EquipmentCardContent = ({
 }) => {
   return (
     <>
+      <p>
+        Status: <EquipmentCardDescription equipment={equipment} />
+      </p>
       <p>Type: {equipment.type}</p>
       {equipment.type === 'Dumbells' ||
       equipment.type === 'Barbell' ? (
@@ -87,9 +90,9 @@ const Equipment = () => {
           <ObjectCard
             key={equipment.id}
             title={equipment.name}
-            description={
-              <EquipmentCardDescription equipment={equipment} />
-            }
+            description={new Date(
+              equipment.createdAt,
+            ).toLocaleDateString()}
             content={<EquipmentCardContent equipment={equipment} />}
             footer={
               <Link to={`/equipment/${equipment.id}`}>

@@ -1,16 +1,27 @@
+import { cn } from '@/utils'
+
+interface DifficultyIndicatorProps
+  extends React.HTMLAttributes<HTMLParagraphElement> {
+  difficulty: Difficulty
+}
 const DifficultyIndicator = ({
   difficulty,
-}: {
-  difficulty: Difficulty
-}) => {
-  switch (difficulty) {
-    case 'EASY':
-      return <span className='text-green-500'>Easy</span>
-    case 'MEDIUM':
-      return <span className='text-yellow-500'>Medium</span>
-    case 'HARD':
-      return <span className='text-red-500'>Hard</span>
-  }
+  className,
+  ...props
+}: DifficultyIndicatorProps) => {
+  return (
+    <p
+      className={cn(
+        className,
+        difficulty === 'EASY' && 'text-green-500',
+        difficulty === 'MEDIUM' && 'text-yellow-500',
+        difficulty === 'HARD' && 'text-red-500',
+      )}
+      {...props}
+    >
+      {difficulty}
+    </p>
+  )
 }
 
 export default DifficultyIndicator

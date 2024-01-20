@@ -29,10 +29,7 @@ function useAdd<T>({
     mutationFn: async (values) => {
       const { data } = await axios.post(
         `${import.meta.env.VITE_BASE_URL || ''}${url}`,
-        {
-          ...values,
-          date: 1,
-        },
+        values,
       )
       return data as T
     },

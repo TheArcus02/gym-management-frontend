@@ -15,7 +15,14 @@ export const TrainingCardContent = ({
 }: {
   training: Training
 }) => {
-  return <p>Exercises count: {training.exercises.length}</p>
+  return (
+    <>
+      <p className='text-foreground/80 mb-4'>
+        {training.description}
+      </p>
+      <p>Exercises count: {training.exercises.length}</p>
+    </>
+  )
 }
 
 const Training = () => {
@@ -56,7 +63,9 @@ const Training = () => {
           <ObjectCard
             key={training.id}
             title={training.name}
-            description={training.description}
+            description={new Date(
+              training.createdAt,
+            ).toLocaleDateString()}
             content={<TrainingCardContent training={training} />}
             footer={
               <>

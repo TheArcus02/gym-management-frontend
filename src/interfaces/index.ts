@@ -13,7 +13,7 @@ type EquipmentObject = Dumbells | Barbell | Machine
 interface DbObject {
   id: number
   name: string
-  date: number
+  createdAt: number
 }
 
 interface Trainer extends DbObject {

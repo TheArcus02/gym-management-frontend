@@ -19,6 +19,10 @@ export const ExerciseCardContent = ({
 }) => {
   return (
     <>
+      <DifficultyIndicator
+        difficulty={exercise.difficulty}
+        className='mb-4'
+      />
       <p>
         Category: <CategoryIndicator category={exercise.category} />
       </p>
@@ -82,9 +86,9 @@ const Exercise = () => {
           <ObjectCard
             key={exercise.id}
             title={exercise.name}
-            description={
-              <DifficultyIndicator difficulty={exercise.difficulty} />
-            }
+            description={new Date(
+              exercise.createdAt,
+            ).toLocaleDateString()}
             content={<ExerciseCardContent exercise={exercise} />}
             footer={
               <>
