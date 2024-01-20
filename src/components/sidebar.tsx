@@ -9,10 +9,23 @@ import {
   Anvil,
 } from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
+import { cn } from '@/utils'
 
-const Sidebar = () => {
+interface SidebarProps
+  extends React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLElement>,
+    HTMLElement
+  > {}
+
+const Sidebar = ({ className, ...props }: SidebarProps) => {
   return (
-    <aside className='h-full w-full items-stretch max-w-[250px]'>
+    <aside
+      className={cn(
+        'h-full w-full items-stretch max-w-[250px]',
+        className,
+      )}
+      {...props}
+    >
       <h1 className='text-xl font-bold text-center py-5 px-3 flex items-center justify-center'>
         <Dumbbell className='mr-2' size={24} />
         Gym Management

@@ -19,7 +19,7 @@ export const EquipmentCardContent = ({
   return (
     <>
       <p>
-        Status: <EquipmentCardDescription equipment={equipment} />
+        Status: <EquipmentCardStatus equipment={equipment} />
       </p>
       <p>Type: {equipment.type}</p>
       {equipment.type === 'Dumbells' ||
@@ -40,7 +40,7 @@ export const EquipmentCardContent = ({
   )
 }
 
-export const EquipmentCardDescription = ({
+export const EquipmentCardStatus = ({
   equipment,
 }: {
   equipment: EquipmentObject
