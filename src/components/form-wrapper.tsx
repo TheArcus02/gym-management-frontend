@@ -13,7 +13,7 @@ const FormWrapper = ({
   form,
 }: FormWrapperProps) => {
   return (
-    <div className='flex flex-col items-center justify-center h-full '>
+    <div className='flex flex-col items-center justify-center h-full px-6 md:px-0'>
       <div className='max-w-[360px] w-full'>
         <div>
           <h2 className='font-bold text-lg'>{title}</h2>

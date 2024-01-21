@@ -26,13 +26,14 @@ import Equipment from './pages/equipment/equipment'
 import AddEquipment from './pages/equipment/add-equipment'
 import EditEquipment from './pages/equipment/edit-equipment'
 import AssignTraining from './pages/workout-plan/assign-training'
+import Dashboard from './pages/dashboard/dashboard'
 
 export default function App() {
   return (
     <>
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<h2>Dashboard</h2>} />
+          <Route index element={<Dashboard />} />
           <Route path='/trainer'>
             <Route index element={<Trainer />} />
             <Route path='add' element={<AddTrainer />} />
