@@ -222,3 +222,223 @@ export const useUpdateClient = () => {
     redirectUrl: '/client',
   })
 }
+
+interface StartTrainingParams {
+  clientId: number
+  exerciseId: number
+  trainingId: number
+}
+
+export const useStartTrainingClient = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({
+      clientId,
+      exerciseId,
+    }: StartTrainingParams) => {
+      const { data } = await axios.patch(
+        `${
+          import.meta.env.VITE_BASE_URL || ''
+        }/api/client/${clientId}/start-training/${exerciseId}`,
+      )
+      return data as Client
+    },
+    onMutate: async ({ clientId, exerciseId, trainingId }) => {
+      await queryClient.cancelQueries([
+        'training',
+        'client',
+        clientId,
+        trainingId,
+      ])
+
+      const prevClient = queryClient.getQueryData<Client>([
+        'client',
+        clientId,
+      ])
+
+      const prevTraining = queryClient.getQueryData<Training>([
+        'training',
+        trainingId,
+      ])
+
+      const prevExercise = prevTraining?.exercises.find(
+        (e) => e.id === exerciseId,
+      )
+
+      if (prevClient && prevTraining && prevExercise) {
+        const newTraining: Training = {
+          ...prevTraining,
+          exercises: prevTraining.exercises.map((e) => {
+            if (e.equipment?.isOccupied === true) {
+              return {
+                ...e,
+                equipment: {
+                  ...e.equipment,
+                  isOccupied: false,
+                  occupiedBy: null,
+                },
+              }
+            }
+            if (
+              e.id === exerciseId ||
+              e.equipment.id === prevExercise.equipment.id
+            ) {
+              return {
+                ...e,
+                equipment: {
+                  ...e.equipment,
+                  isOccupied: true,
+                  occupiedBy: clientId,
+                },
+              }
+            }
+            return e
+          }),
+        }
+        const newClient: Client = {
+          ...prevClient,
+          workoutPlan: {
+            ...prevClient.workoutPlan,
+            trainings: prevClient.workoutPlan.trainings.map((t) => {
+              if (t.id === trainingId) {
+                return newTraining
+              }
+              return t
+            }),
+          },
+        }
+        queryClient.setQueryData<Client>(
+          ['client', clientId],
+          newClient,
+        )
+        queryClient.setQueryData<Training>(
+          ['training', trainingId],
+          newTraining,
+        )
+      }
+      return { prevClient, prevTraining }
+    },
+    onError: (error, variables, context) => {
+      console.log(error)
+      toast.error('Error starting training')
+      if (context?.prevClient) {
+        queryClient.setQueryData<Client>(
+          ['client', variables.clientId],
+          context.prevClient,
+        )
+      }
+      if (context?.prevTraining) {
+        queryClient.setQueryData<Training>(
+          ['training', variables.trainingId],
+          context.prevTraining,
+        )
+      }
+    },
+    onSettled: (variables) => {
+      queryClient.invalidateQueries([
+        'trainings',
+        'client',
+        variables?.id,
+      ])
+    },
+    onSuccess: () => {
+      toast.success('Training started successfully')
+    },
+  })
+}
+
+export const useStopTrainingClient = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({
+      clientId,
+      exerciseId,
+    }: StartTrainingParams) => {
+      const { data } = await axios.patch(
+        `${
+          import.meta.env.VITE_BASE_URL || ''
+        }/api/client/${clientId}/stop-training/${exerciseId}`,
+      )
+      return data as Client
+    },
+    onMutate: async ({ clientId, trainingId }) => {
+      await queryClient.cancelQueries([
+        'training',
+        'client',
+        clientId,
+        trainingId,
+      ])
+
+      const prevClient = queryClient.getQueryData<Client>([
+        'client',
+        clientId,
+      ])
+
+      const prevTraining = queryClient.getQueryData<Training>([
+        'training',
+        trainingId,
+      ])
+
+      if (prevClient && prevTraining) {
+        const newTraining: Training = {
+          ...prevTraining,
+          exercises: prevTraining.exercises.map((e) => ({
+            ...e,
+            equipment: {
+              ...e.equipment,
+              isOccupied: false,
+              occupiedBy: null,
+            },
+          })),
+        }
+        const newClient: Client = {
+          ...prevClient,
+          workoutPlan: {
+            ...prevClient.workoutPlan,
+            trainings: prevClient.workoutPlan.trainings.map((t) => {
+              if (t.id === trainingId) {
+                return newTraining
+              }
+              return t
+            }),
+          },
+        }
+        queryClient.setQueryData<Client>(
+          ['client', clientId],
+          newClient,
+        )
+        queryClient.setQueryData<Training>(
+          ['training', trainingId],
+          newTraining,
+        )
+      }
+      return { prevClient, prevTraining }
+    },
+    onError: (error, variables, context) => {
+      console.log(error)
+      toast.error('Error stoping training')
+      if (context?.prevClient) {
+        queryClient.setQueryData<Client>(
+          ['client', variables.clientId],
+          context.prevClient,
+        )
+      }
+      if (context?.prevTraining) {
+        queryClient.setQueryData<Training>(
+          ['training', variables.trainingId],
+          context.prevTraining,
+        )
+      }
+    },
+    onSettled: (variables) => {
+      queryClient.invalidateQueries([
+        'trainings',
+        'client',
+        variables?.id,
+      ])
+    },
+    onSuccess: () => {
+      toast.success('Training stoped successfully')
+    },
+  })
+}

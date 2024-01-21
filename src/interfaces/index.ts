@@ -28,6 +28,8 @@ interface Client extends DbObject {
   email: string
   workoutPlan: WorkoutPlan
   trainerId: number
+  isTraining: boolean
+  currentlyTrainedExerciseId: number | null
 }
 
 interface WorkoutPlan extends DbObject {
@@ -61,7 +63,8 @@ interface CardioExercise extends Exercise {
 }
 
 interface Equipment extends DbObject {
-  ocupied: boolean
+  isOccupied: boolean
+  occupiedBy: number | null
   type: EquipmentType
 }
 

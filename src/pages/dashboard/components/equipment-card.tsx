@@ -28,6 +28,14 @@ const EquipmentCard = () => {
             Machines Count:{' '}
             {equipment.filter((e) => e.type === 'Machine').length}
           </p>
+          <p>
+            Ocuppied Equipment Count:{' '}
+            {equipment.filter((e) => e.isOccupied).length}
+          </p>
+          <p>
+            Available Equipment Count:{' '}
+            {equipment.filter((e) => !e.isOccupied).length}
+          </p>
         </>
       }
       link='/equipment'

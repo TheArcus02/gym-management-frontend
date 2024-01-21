@@ -23,7 +23,7 @@ const DashboardCard = ({
   link,
 }: DashboardCardProps) => {
   return (
-    <Card className='max-h-96 flex flex-col'>
+    <Card className='h-full max-h-80 flex flex-col'>
       <CardHeader>
         <CardTitle className='flex itemx-center justify-between'>
           {title}

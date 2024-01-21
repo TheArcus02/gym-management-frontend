@@ -25,6 +25,7 @@ import {
   Dumbbell,
   GanttChartSquare,
   MoreVertical,
+  Weight,
 } from 'lucide-react'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
@@ -43,6 +44,7 @@ export const ClientCardContent = ({
         Workout Plan:{' '}
         {client.workoutPlan ? client.workoutPlan.name : 'None'}
       </p>
+      <p>Is training: {client.isTraining ? 'Yes' : 'No'}</p>
     </>
   )
 }
@@ -122,6 +124,16 @@ const Client = () => {
                                     <span>Assign Workout Plan</span>
                                   </CommandItem>
                                 </Link>
+                                {client.workoutPlan && (
+                                  <Link
+                                    to={`/client/${client.id}/training`}
+                                  >
+                                    <CommandItem className='cursor-pointer'>
+                                      <Weight className='mr-2 h-4 w-4' />
+                                      <span>Train</span>
+                                    </CommandItem>
+                                  </Link>
+                                )}
                               </CommandGroup>
                             </CommandList>
                           </Command>

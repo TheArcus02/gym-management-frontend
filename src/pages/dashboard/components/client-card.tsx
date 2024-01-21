@@ -18,6 +18,11 @@ const ClientCard = () => {
             {clients?.reduce((a, b) => a + b.weight, 0) /
               clients?.length || 0}
           </p>
+          <p>
+            Currently training:{' '}
+            {clients?.filter((client) => client.isTraining).length ||
+              0}
+          </p>
         </>
       }
       link='/client'

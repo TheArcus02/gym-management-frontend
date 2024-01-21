@@ -45,7 +45,7 @@ export const EquipmentCardStatus = ({
 }: {
   equipment: EquipmentObject
 }) => {
-  return !equipment.ocupied ? (
+  return !equipment.isOccupied ? (
     <span className='text-green-500'>Free</span>
   ) : (
     <span className='text-yellow-500'>Occupied</span>

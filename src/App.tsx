@@ -27,6 +27,8 @@ import AddEquipment from './pages/equipment/add-equipment'
 import EditEquipment from './pages/equipment/edit-equipment'
 import AssignTraining from './pages/workout-plan/assign-training'
 import Dashboard from './pages/dashboard/dashboard'
+import ChooseTraining from './pages/client/choose-training'
+import ClientTraining from './pages/client/client-training'
 
 export default function App() {
   return (
@@ -52,6 +54,11 @@ export default function App() {
             <Route
               path=':id/workout-plan'
               element={<AssignWorkoutPlan />}
+            />
+            <Route path=':id/training' element={<ChooseTraining />} />
+            <Route
+              path=':clientId/training/:trainingId'
+              element={<ClientTraining />}
             />
           </Route>
           <Route path='/workout-plan'>

@@ -7,7 +7,7 @@ import WorkoutPlanCard from './components/workout-plan-card'
 
 const Dashboard = () => {
   return (
-    <div className='h-full grid grid-cols-1 md:grid-cols-3 gap-4 p-4 max-w-[1600px] mx-auto'>
+    <div className='h-full grid grid-cols-1 md:grid-cols-3 gap-4 p-4 max-w-[1500px] mx-auto items-center'>
       <TrainerCard />
       <ClientCard />
       <WorkoutPlanCard />
